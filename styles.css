@@ -1,0 +1,15 @@
+.grid{
+    border: 1px solid #ccc;
+    background: #000;
+}
+.row{
+    display: flex;
+    flex-direction: row;
+}
+.board{
+    display: flex;
+    flex-direction: column;
+}
+.b1{
+    background: #fff;
+}
