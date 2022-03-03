@@ -247,6 +247,7 @@ function load(){
         }
 
     }
+    console.log(board,vboard)
 
 }
 function checkpos(cur){
@@ -255,7 +256,7 @@ function checkpos(cur){
       for (var j=0;j<shape[i].length;j++){
          if (shape[i][j]!=0){
             let posib=[cur[0][0]+j,cur[0][1]+i]
-            if (posib[0]<0 || posib[1]<0 || posib[0]>=siz[0] || posib[1]>=siz[1] ){
+            if (posib[0]<0 || posib[1]<0 || posib[0]>=siz[0] || posib[1]>=siz[1]+5 ){
                console.log("fail")
                return false
             }else if (board[posib[1]][posib[0]]!=0){
@@ -273,36 +274,34 @@ function putblock(cur){
       for (var j=0;j<shape[i].length;j++){
          if (shape[i][j]!=0){
             let posib=[cur[0][0]+j,cur[0][1]+i]
-            board[posib[1]][posib[0]]=shape[i][j]+0
+               board[posib[1]][posib[0]]=shape[i][j]+0
          }
       }
    }
 
 
 }
-function render(cur){
+function rend(cur){
    for (var i=6;i<board.length;i++){
-      for (var j; j<board[i].length;j++){
+      for (var j=0; j<board[i].length;j++){
          if (board[i][j]==0){
-            console.log(a)
-            vboard[i][j].style.background="#000"
+            vboard[i-6][j].style.background="#000"
          }else{
-            console.log(vboard[i-6][j])
             vboard[i-6][j].style.background="#FFF"
          }
       }
    }
-//   shape=blocks[cur[1]][cur[2]]
-//   for (var i=0;i<shape.length;i++){
-//      for (var j=0;j<shape[i].length;j++){
-//         if (shape[i][j]!=0){
-//            let posib=[cur[0][0]+j,cur[0][1]+i]
-//            console.log(posib)
-//            vboard[posib[1]][posib[0]].style.background="#FFF"
-//            console.log("SMASDHJSHD")
-//         }
-//      }
-//   }
+   shape=blocks[cur[1]][cur[2]]
+   for (var i=0;i<shape.length;i++){
+      for (var j=0;j<shape[i].length;j++){
+         if (shape[i][j]!=0){
+            let posib=[cur[0][0]+j,cur[0][1]+i-6]
+            if (posib[1]>0){
+               vboard[posib[1]][posib[0]].style.background="#FFF"
+            }
+         }
+      }
+   }
 
 }
 function resetblock(){
@@ -344,7 +343,7 @@ function loop(timestamp){
    }
    prev=elp + 0
 
-   render(current)
+   rend(current)
    window.requestAnimationFrame(loop)
 }
 window.requestAnimationFrame(loop)
