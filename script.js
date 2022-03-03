@@ -5,8 +5,13 @@ const arr=20
 const screensize = [window.innerHeight,window.innerWidth];
 const magnitude=(Math.min(...screensize)/(Math.max(...siz)*2))
 const droprate=50
-var board=[]
 var vboard=[]
+var board=[]
+var start;
+var bag=[0,1,2,3,4,5,6]
+bag=shuffleArray([0,1,2,3,4,5,6])
+bag=[...bag,...shuffleArray([0,1,2,3,4,5,6])]
+
 blocks={
     0:[
         [
@@ -212,10 +217,6 @@ function shuffleArray(array) {
    }
    return array
 }
-var start;
-var bag=[0,1,2,3,4,5,6]
-bag=shuffleArray([0,1,2,3,4,5,6])
-bag=[...bag,...shuffleArray([0,1,2,3,4,5,6])]
 function getnext(){
    if (bag.length<9){
       bag=[...bag,...shuffleArray([0,1,2,3,4,5,6])]
@@ -257,16 +258,35 @@ function checkpos(cur){
          if (shape[i][j]!=0){
             let posib=[cur[0][0]+j,cur[0][1]+i]
             if (posib[0]<0 || posib[1]<0 || posib[0]>=siz[0] || posib[1]>=siz[1]+5 ){
-               console.log("fail")
                return false
             }else if (board[posib[1]][posib[0]]!=0){
-               console.log("fail")
                return false
             }
          }
       }
    }
    return true;
+}
+function rotate(cur,dir){
+   var kickl=[]
+   if (cur[1]==6){
+   return [true,cur]
+   }else if (cur[1]==0){
+      kickl=wallkick[1][dir][cur[2]]
+   }else{
+      kickl=wallkick[1][dir][cur[2]]
+   }
+   if (dir=="r"){dir=1;
+   }else{dir=-1;
+   }
+   for (var i=0;i<kickl.length;i++){
+      let tempcur=[[cur[0][0]+kickl[i][0],cur[0][1]+kickl[i][1]],cur[1],(cur[2]+dir)%4]
+      if (checkpos(tempcur)){
+         return [true,tempcur]
+      }
+   }
+   return [false,cur]
+
 }
 function putblock(cur){
    shape=blocks[cur[1]][cur[2]]
@@ -282,12 +302,12 @@ function putblock(cur){
 
 }
 function rend(cur){
-   for (var i=6;i<board.length;i++){
+   for (var i=5;i<board.length;i++){
       for (var j=0; j<board[i].length;j++){
          if (board[i][j]==0){
-            vboard[i-6][j].style.background="#000"
+            vboard[i-5][j].style.background="#000"
          }else{
-            vboard[i-6][j].style.background="#FFF"
+            vboard[i-5][j].style.background="#FFF"
          }
       }
    }
@@ -295,14 +315,21 @@ function rend(cur){
    for (var i=0;i<shape.length;i++){
       for (var j=0;j<shape[i].length;j++){
          if (shape[i][j]!=0){
-            let posib=[cur[0][0]+j,cur[0][1]+i-6]
-            if (posib[1]>0){
+            let posib=[cur[0][0]+j,cur[0][1]+i-5]
+            if (posib[1]>=0){
                vboard[posib[1]][posib[0]].style.background="#FFF"
             }
          }
       }
    }
 
+}
+function rotstuff(dir){
+   let temp=rotate(current,dir)
+   if (temp[0]){
+      timetouchedfloor=elp
+      current=temp[1]
+   }
 }
 function resetblock(){
     current=[[3,0],getnext(),0]
@@ -312,6 +339,7 @@ function resetblock(){
 }
 var current=[[3,0],getnext(),0]
 var prev=0;
+var elp;
 var nextmovetime;
 var isfloor=false
 var timetouchedfloor=-1
@@ -321,9 +349,10 @@ function loop(timestamp){
       start=timestamp 
       nextmovetime=droprate
    }
-   let elp=timestamp-start
+   elp=timestamp-start
    if (nextmovetime>=prev && nextmovetime<=timestamp){
       //drop the block one
+      
       if (checkpos([[current[0][0],current[0][1]+1],current[1],current[2]])){
          //move down
          current[0][1]+=1
