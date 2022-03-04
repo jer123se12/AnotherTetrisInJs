@@ -6,7 +6,7 @@ const screensize = [window.innerHeight,window.innerWidth];
 const magnitude=(Math.min(...screensize)/(Math.max(...siz)*2))
 const droprate=50
 const newrow=new Array(siz[0]).fill(0)
-const blockColor = {0: "#FF6A4A", 1: "#81FF62", 2: "#62BFFF", 3: "#D762FF", 4: "#FF62A9", 5: "#FFC300", 6: "#FF3131", 7: "#FF6A4A"}
+const blockColor = {1: "#00FFFF", 2: "#800080", 3: "#ff0000", 4: "#00ff00", 5: "#0000ff", 6: "#ff7f00", 7: "#ffff00"}
 const keybinds={
    "right"  :  "KeyD",
    "left"   :  "KeyA",
@@ -284,6 +284,15 @@ window.requestAnimationFrame(loop)
 
 }
 
+function hd(){
+   let temp=current
+   while (true){
+   temp=[[temp[0][0],temp[0][1]],temp[1],temp[2]]
+   if (!checkpos(temp)){
+      return temp
+   }
+   }
+}
 function move(dir){
    if (dir=="r"){
       keyheld=1
