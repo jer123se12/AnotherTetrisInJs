@@ -1,4 +1,4 @@
-const siz=[10,20]
+const siz=[10,20] // Width, Height
 const lockdelay=500
 const das=120
 const arr=20
@@ -23,8 +23,24 @@ bag=[...bag,...shuffleArray([0,1,2,3,4,5,6])]
 var keyheld=0
 var timedirpress=0
 const newrow=new Array(siz[0]).fill(0)
+
+// Score System
+let score = 0
+let multiplier = 1
+let maxMul = 7
+
+// Num of Elements
+let elementNum = 0
+
 document.addEventListener('keydown', keydown);
 document.addEventListener('keyup', keyup);
+
+function waitButtonPress(e) {
+    document.getElementById("startGameButton").addEventListener("click",()=>{
+        load()
+    })
+}
+
 function keyup(e){
    switch (e.code){
       case keybinds["right"]:
@@ -373,12 +389,20 @@ function checklineclear(){
    var i=0
    while (i<board.length){
       if (!board[i].includes(0)){
-         console.log(board)
          board.splice(i,1)
          board.unshift(newrow)
-         console.log(board)
+         score += 10 + (multiplier * 5)
+         if (multiplier == maxMul) {
+              multiplier += 1
+         }
+         document.getElementById("score").innerHTML = `Score: ${score}`
       }
       i++
+   }
+   console.log(board)
+   elementNum += 1
+   if (elementNum === siz[1]) {
+       alert("Game Over!")
    }
 }
 function rotstuff(dir){
