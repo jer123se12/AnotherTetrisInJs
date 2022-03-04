@@ -7,9 +7,24 @@
     flex-direction: row;
 }
 .board{
+    width: 50%;
+    margin: auto;
     display: flex;
     flex-direction: column;
 }
+
 .b1{
     background: #fff;
+}
+
+.mainFrame {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.headerText {
+    text-align: center;
+    padding-bottom: 5%;
 }

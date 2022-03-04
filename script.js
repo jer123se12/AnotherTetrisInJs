@@ -181,6 +181,8 @@ blocks={
         ],
     ]
 }
+blockColor = {0: "#FF6A4A", 1: "#81FF62", 2: "#62BFFF", 3: "#D762FF", 4: "#FF62A9"}
+
 wallkick=[
 {
    "r":[
@@ -311,7 +313,7 @@ function rend(cur){
          if (board[i][j]==0){
             vboard[i-5][j].style.background="#000"
          }else{
-            vboard[i-5][j].style.background="#FFF"
+            vboard[i-5][j].style.background=blockColor[i-5]
          }
       }
    }
