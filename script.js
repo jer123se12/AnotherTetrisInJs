@@ -181,7 +181,7 @@ blocks={
         ],
     ]
 }
-blockColor = {0: "#FF6A4A", 1: "#81FF62", 2: "#62BFFF", 3: "#D762FF", 4: "#FF62A9"}
+blockColor = {0: "#FF6A4A", 1: "#81FF62", 2: "#62BFFF", 3: "#D762FF", 4: "#FF62A9", 5:"#FFC300", 6:"#FF3131"}
 
 wallkick=[
 {
