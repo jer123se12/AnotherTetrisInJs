@@ -181,7 +181,7 @@ blocks={
         ],
     ]
 }
-blockColor = {0: "#FF6A4A", 1: "#81FF62", 2: "#62BFFF", 3: "#D762FF", 4: "#FF62A9", 5:"#FFC300", 6:"#FF3131"}
+blockColor = {0: "#FF6A4A", 1: "#81FF62", 2: "#62BFFF", 3: "#D762FF", 4: "#FF62A9", 5: "#FFC300", 6: "#FF3131", 7: "#FF6A4A"}
 
 wallkick=[
 {
@@ -314,6 +314,9 @@ function rend(cur){
             vboard[i-5][j].style.background="#000"
          }else{
             vboard[i-5][j].style.background=blockColor[board[i][j]]
+            if (blockColor[board[i][j]]===undefined) {
+                console.log(board[i][j])
+            }
          }
       }
    }
@@ -324,6 +327,9 @@ function rend(cur){
             let posib=[cur[0][0]+j,cur[0][1]+i-5]
             if (posib[1]>=0){
                vboard[posib[1]][posib[0]].style.background=blockColor[shape[i][j]]
+               if (blockColor[shape[i][j]]===undefined) {
+                console.log(shape[i][j])
+            }
             }
          }
       }
@@ -372,7 +378,7 @@ function loop(timestamp){
       }
       nextmovetime+=droprate
       
-   }else if (isfloor && elp-timetouchedfloor>lockdelay){
+   } else if (isfloor && elp-timetouchedfloor>lockdelay) {
       putblock(current)
       resetblock()
    }
