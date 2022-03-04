@@ -313,7 +313,7 @@ function rend(cur){
          if (board[i][j]==0){
             vboard[i-5][j].style.background="#000"
          }else{
-            vboard[i-5][j].style.background=blockColor[i-5]
+            vboard[i-5][j].style.background=blockColor[board[i][j]]
          }
       }
    }
@@ -323,7 +323,7 @@ function rend(cur){
          if (shape[i][j]!=0){
             let posib=[cur[0][0]+j,cur[0][1]+i-5]
             if (posib[1]>=0){
-               vboard[posib[1]][posib[0]].style.background="#FFF"
+               vboard[posib[1]][posib[0]].style.background=blockColor[shape[i][j]]
             }
          }
       }
