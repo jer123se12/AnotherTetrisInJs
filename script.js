@@ -4,7 +4,8 @@ const das=120
 const arr=20
 const screensize = [window.innerHeight,window.innerWidth];
 const magnitude=(Math.min(...screensize)/(Math.max(...siz)*2))
-const droprate=50
+const droprate=500
+const sdr=50
 const newrow=new Array(siz[0]).fill(0)
 const blockColor = {1: "#00FFFF", 2: "#800080", 3: "#ff0000", 4: "#00ff00", 5: "#0000ff", 6: "#ff7f00", 7: "#ffff00"}
 const keybinds={
@@ -16,6 +17,8 @@ const keybinds={
    "l"      :  "KeyL"
 
 }
+let softdrop=false
+let softdroptime=0
 let vboard=[]
 let board=[]
 let start;
@@ -58,6 +61,9 @@ function keyup(e){
          if (keyheld<0){
             keyheld=0
          }break;
+      case keybinds["sd"]:
+         softdrop=false
+         break;
    }
 }
 function keydown(e){
@@ -66,6 +72,10 @@ function keydown(e){
       case keybinds["r"]:
          console.log("hiii")
          rotstuff("r")
+         break;
+      case keybinds["sd"]:
+         softdrop=true
+         softdroptime=elp
          break;
       case keybinds["l"]:
          rotstuff("l")
@@ -76,6 +86,12 @@ function keydown(e){
       case keybinds["left"]:
          move("l")
          break;
+      case keybinds["hd"]:
+         current=hd()
+         putblock(current)
+         resetblock()
+         checklineclear()
+         break
    }
 }
 const blocks={
@@ -227,30 +243,30 @@ const blocks={
 const wallkick=[
 {
    "r":[
-      [[0,0],[-2,0],[1,0],[-2,-1],[1,2]],
-      [[0,0],[-1,0],[2,0],[-1,2],[2,-1]],
-      [[0,0],[2,0],[-1,0],[2,1],[-1,-2]],
-      [[0,0],[1,0],[-2,0],[1,-2],[-2,1]],
+      [[0,0],[-2,0],[1,0],[-2,1],[1,-2]],
+      [[0,0],[-1,0],[2,0],[-1,-2],[2,1]],
+      [[0,0],[2,0],[-1,0],[2,-1],[-1,2]],
+      [[0,0],[1,0],[-2,0],[1,2],[-2,-1]],
       ],
    "l":[
-      [[0,0],[2,0],[-1,0],[2,1],[-1,-2]],
-      [[0,0],[1,0],[-2,0],[1,-2],[-2,1]],
-      [[0,0],[-2,0],[1,0],[-2,-1],[1,2]],
-      [[0,0],[-1,0],[2,0],[-1,2],[2,-1]],
+      [[0,0],[2,0],[-1,0],[2,-1],[-1,2]],
+      [[0,0],[1,0],[-2,0],[1,2],[-2,-1]],
+      [[0,0],[-2,0],[1,0],[-2,1],[1,-2]],
+      [[0,0],[-1,0],[2,0],[-1,-2],[2,1]],
       ],
 },
 {
    "r":[
-      [[0,0],[-1,0],[-1,1],[0,-2],[-1,-2]],
-      [[0,0],[1,0],[1,-1],[0,2],[1,2]],
-      [[0,0],[1,0],[1,1],[0,-2],[1,-2]],
-      [[0,0],[-1,0],[-1,-1],[0,+2],[-1,2]],
-      ],
-   "l":[
-      [[0,0],[1,0],[1,-1],[0,2],[1,2]],
-      [[0,0],[-1,0],[-1,1],[0,-2],[-1,-2]],
       [[0,0],[-1,0],[-1,-1],[0,2],[-1,2]],
       [[0,0],[1,0],[1,1],[0,-2],[1,-2]],
+      [[0,0],[1,0],[1,-1],[0,2],[1,2]],
+      [[0,0],[-1,0],[-1,1],[0,-2],[-1,-2]],
+      ],
+   "l":[
+      [[0,0],[1,0],[1,1],[0,-2],[1,-2]],
+      [[0,0],[-1,0],[-1,-1],[0,2],[-1,2]],
+      [[0,0],[-1,0],[-1,1],[0,-2],[-1,-2]],
+      [[0,0],[1,0],[1,-1],[0,2],[1,2]],
       ],
 }
 ]
@@ -303,10 +319,12 @@ window.requestAnimationFrame(loop)
 function hd(){
    let temp=current
    while (true){
-   temp=[[temp[0][0],temp[0][1]],temp[1],temp[2]]
    if (!checkpos(temp)){
-      return temp
+      
+      return [[temp[0][0],temp[0][1]-1],temp[1],temp[2]]
+
    }
+   temp=[[temp[0][0],temp[0][1]+1],temp[1],temp[2]]
    }
 }
 function move(dir){
@@ -386,6 +404,21 @@ function rend(cur){
          }
       }
    }
+   let h=hd()
+   shape=blocks[h[1]][h[2]]
+   for (let i=0;i<shape.length;i++){
+      for (let j=0;j<shape[i].length;j++){
+         if (shape[i][j]!=0){
+            let posib=[h[0][0]+j,h[0][1]+i-5]
+            if (posib[1]>=0){
+               vboard[posib[1]][posib[0]].style.background="#ccc"
+               if (blockColor[shape[i][j]]===undefined) {
+                console.log(shape[i][j])
+            }
+            }
+         }
+      }
+   }
    shape=blocks[cur[1]][cur[2]]
    for (let i=0;i<shape.length;i++){
       for (let j=0;j<shape[i].length;j++){
@@ -400,6 +433,7 @@ function rend(cur){
          }
       }
    }
+   
 
 }
 function checklineclear(){
@@ -418,7 +452,8 @@ function checklineclear(){
    }
    console.log(board)
    elementNum += 1
-   if (elementNum === siz[1]) {
+   console.log(board[4],newrow,board[4]!=newrow)
+   if (board[4].reduce((a, b) => a + b, 0)!=0) {
        alert("Game Over!")
    }
 }
@@ -430,7 +465,7 @@ function rotstuff(dir){
    }
 }
 function resetblock(){
-    current=[[3,0],getnext(),0]
+    current=[[3,4],getnext(),0]
     isfloor=false
     timetouchedfloor=-1
     nextmovetime+=droprate
@@ -443,7 +478,7 @@ function loop(timestamp){
       nextmovetime=droprate
    }
    elp=timestamp-start
-   if (nextmovetime>=prev && nextmovetime<=timestamp){
+   if (!softdrop && elp-nextmovetime>=droprate){
       //drop the block one
       
       if (checkpos([[current[0][0],current[0][1]+1],current[1],current[2]])){
@@ -458,7 +493,20 @@ function loop(timestamp){
          }
       }
       nextmovetime+=droprate
-      
+   }else if (softdrop && elp-softdroptime>sdr){
+      if (checkpos([[current[0][0],current[0][1]+1],current[1],current[2]])){
+         //move down
+         current[0][1]+=1
+         isfloor=false
+
+      }else{
+         if (!isfloor){
+            isfloor=true
+            timetouchedfloor=elp+0
+         }  
+      }
+      softdroptime+=sdr
+   }
    
    if (keyheld!=0 && elp-timedirpress>das){
       timedirpress+=arr
@@ -468,7 +516,7 @@ function loop(timestamp){
       timetouchedfloor=elp
       }   
    }
-   }else if (isfloor && elp-timetouchedfloor>lockdelay){
+   if (isfloor && elp-timetouchedfloor>lockdelay){
       putblock(current)
       resetblock()
       checklineclear()
