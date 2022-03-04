@@ -5,6 +5,8 @@ const arr=20
 const screensize = [window.innerHeight,window.innerWidth];
 const magnitude=(Math.min(...screensize)/(Math.max(...siz)*2))
 const droprate=50
+const newrow=new Array(siz[0]).fill(0)
+const blockColor = {0: "#FF6A4A", 1: "#81FF62", 2: "#62BFFF", 3: "#D762FF", 4: "#FF62A9", 5: "#FFC300", 6: "#FF3131", 7: "#FF6A4A"}
 const keybinds={
    "right"  :  "KeyD",
    "left"   :  "KeyA",
@@ -22,7 +24,12 @@ bag=shuffleArray([0,1,2,3,4,5,6])
 bag=[...bag,...shuffleArray([0,1,2,3,4,5,6])]
 let keyheld=0
 let timedirpress=0
-const newrow=new Array(siz[0]).fill(0)
+let current=[[3,0],getnext(),0]
+let prev=0;
+let elp;
+let nextmovetime;
+let isfloor=false
+let timetouchedfloor=-1
 document.addEventListener('keydown', keydown);
 document.addEventListener('keyup', keyup);
 function keyup(e){
@@ -55,7 +62,7 @@ function keydown(e){
          break;
    }
 }
-blocks={
+const blocks={
     0:[
         [
             [0,0,0,0],
@@ -200,9 +207,8 @@ blocks={
         ],
     ]
 }
-blockColor = {0: "#FF6A4A", 1: "#81FF62", 2: "#62BFFF", 3: "#D762FF", 4: "#FF62A9", 5: "#FFC300", 6: "#FF3131", 7: "#FF6A4A"}
 
-wallkick=[
+const wallkick=[
 {
    "r":[
       [[0,0],[-2,0],[1,0],[-2,-1],[1,2]],
@@ -274,6 +280,7 @@ function load(){
 
     }
     console.log(board,vboard)
+window.requestAnimationFrame(loop)
 
 }
 
@@ -395,12 +402,7 @@ function resetblock(){
     timetouchedfloor=-1
     nextmovetime+=droprate
 }
-let current=[[3,0],getnext(),0]
-let prev=0;
-let elp;
-let nextmovetime;
-let isfloor=false
-let timetouchedfloor=-1
+
 function loop(timestamp){
 
    if (start==undefined){
@@ -443,4 +445,3 @@ function loop(timestamp){
    rend(current)
    window.requestAnimationFrame(loop)
 }
-window.requestAnimationFrame(loop)
