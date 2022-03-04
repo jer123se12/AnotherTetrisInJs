@@ -7,9 +7,39 @@
     flex-direction: row;
 }
 .board{
+    width: 50%;
+    margin: auto;
     display: flex;
     flex-direction: column;
 }
+
 .b1{
     background: #fff;
+}
+
+.mainFrame {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.headerText {
+    width: 100%;
+    text-align: center;
+}
+
+h1 {
+    font-family: Arial, Helvetica;
+}
+
+h2 {
+    font-family: Arial, Helvetica;
+}
+
+.startGameButton {
+    background: linear-gradient(to bottom right, #31B4FF, #31FF88);
+    font-family: Arial, Helvetica;
+    font-size: 1.5rem;
+    border-radius: 1rem;
 }

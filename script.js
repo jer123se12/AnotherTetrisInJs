@@ -200,6 +200,8 @@ blocks={
         ],
     ]
 }
+blockColor = {0: "#FF6A4A", 1: "#81FF62", 2: "#62BFFF", 3: "#D762FF", 4: "#FF62A9", 5:"#FFC300", 6:"#FF3131"}
+
 wallkick=[
 {
    "r":[
@@ -344,7 +346,7 @@ function rend(cur){
          if (board[i][j]==0){
             vboard[i-5][j].style.background="#000"
          }else{
-            vboard[i-5][j].style.background="#FFF"
+            vboard[i-5][j].style.background=blockColor[board[i][j]]
          }
       }
    }
@@ -354,7 +356,7 @@ function rend(cur){
          if (shape[i][j]!=0){
             let posib=[cur[0][0]+j,cur[0][1]+i-5]
             if (posib[1]>=0){
-               vboard[posib[1]][posib[0]].style.background="#FFF"
+               vboard[posib[1]][posib[0]].style.background=blockColor[shape[i][j]]
             }
          }
       }
