@@ -22,7 +22,6 @@ let start;
 let bag=[0,1,2,3,4,5,6]
 bag=shuffleArray([0,1,2,3,4,5,6])
 bag=[...bag,...shuffleArray([0,1,2,3,4,5,6])]
-const newrow=new Array(siz[0]).fill(0)
 let keyheld=0
 let timedirpress=0
 let current=[[3,0],getnext(),0]
