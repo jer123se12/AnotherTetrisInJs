@@ -5,6 +5,8 @@ const arr=20
 const screensize = [window.innerHeight,window.innerWidth];
 const magnitude=(Math.min(...screensize)/(Math.max(...siz)*2))
 const droprate=50
+const newrow=new Array(siz[0]).fill(0)
+const blockColor = {0: "#FF6A4A", 1: "#81FF62", 2: "#62BFFF", 3: "#D762FF", 4: "#FF62A9", 5: "#FFC300", 6: "#FF3131", 7: "#FF6A4A"}
 const keybinds={
    "right"  :  "KeyD",
    "left"   :  "KeyA",
@@ -14,15 +16,21 @@ const keybinds={
    "l"      :  "KeyL"
 
 }
-var vboard=[]
-var board=[]
-var start;
-var bag=[0,1,2,3,4,5,6]
+let vboard=[]
+let board=[]
+let start;
+let bag=[0,1,2,3,4,5,6]
 bag=shuffleArray([0,1,2,3,4,5,6])
 bag=[...bag,...shuffleArray([0,1,2,3,4,5,6])]
-var keyheld=0
-var timedirpress=0
 const newrow=new Array(siz[0]).fill(0)
+let keyheld=0
+let timedirpress=0
+let current=[[3,0],getnext(),0]
+let prev=0;
+let elp;
+let nextmovetime;
+let isfloor=false
+let timetouchedfloor=-1
 
 // Score System
 let score = 0
@@ -71,7 +79,7 @@ function keydown(e){
          break;
    }
 }
-blocks={
+const blocks={
     0:[
         [
             [0,0,0,0],
@@ -216,9 +224,8 @@ blocks={
         ],
     ]
 }
-blockColor = {0: "#FF6A4A", 1: "#81FF62", 2: "#62BFFF", 3: "#D762FF", 4: "#FF62A9", 5: "#FFC300", 6: "#FF3131", 7: "#FF6A4A"}
 
-wallkick=[
+const wallkick=[
 {
    "r":[
       [[0,0],[-2,0],[1,0],[-2,-1],[1,2]],
@@ -250,9 +257,9 @@ wallkick=[
 ]
 
 function shuffleArray(array) {
-   for (var i = array.length - 1; i > 0; i--) {
-      var j = Math.floor(Math.random() * (i + 1));
-      var temp = array[i];
+   for (let i = array.length - 1; i > 0; i--) {
+      let j = Math.floor(Math.random() * (i + 1));
+      let temp = array[i];
       array[i] = array[j];
       array[j] = temp;
    }
@@ -269,19 +276,19 @@ function load(){
     gridhtml=(size,x,y)=>`<div class="grid " id="${x} ${y}" style="width: ${size}px; height: ${size}px"></div>`
 
     let outer=document.getElementById("board")
-    var content=""
-    for (var i=0;i<siz[1];i++){
+    let content=""
+    for (let i=0;i<siz[1];i++){
         content+="<div class=\"row\">"
-        for (var j=0;j<siz[0];j++){
+        for (let j=0;j<siz[0];j++){
             content+=gridhtml(magnitude,i,j)
         }
         content+="</div>"
     }
     outer.innerHTML=content
-    for (var i=0;i<siz[1]+5;i++){
+    for (let i=0;i<siz[1]+5;i++){
         vboard.push([])
         board.push([])
-        for (var j=0;j<siz[0];j++){
+        for (let j=0;j<siz[0];j++){
             board[i].push(0)
             if (i<siz[1]){
             vboard[i].push(document.getElementById(`${i} ${j}`))
@@ -290,6 +297,7 @@ function load(){
 
     }
     console.log(board,vboard)
+window.requestAnimationFrame(loop)
 
 }
 
@@ -303,13 +311,14 @@ function move(dir){
    let temp=[[current[0][0]+keyheld,current[0][1]],current[1],current[2]]
    if (checkpos(temp)){
       current=temp
+      timetouchedfloor=elp
    }
    
 }
 function checkpos(cur){
    shape=blocks[cur[1]][cur[2]]
-   for (var i=0;i<shape.length;i++){
-      for (var j=0;j<shape[i].length;j++){
+   for (let i=0;i<shape.length;i++){
+      for (let j=0;j<shape[i].length;j++){
          if (shape[i][j]!=0){
             let posib=[cur[0][0]+j,cur[0][1]+i]
             if (posib[0]<0 || posib[1]<0 || posib[0]>=siz[0] || posib[1]>=siz[1]+5 ){
@@ -323,7 +332,7 @@ function checkpos(cur){
    return true;
 }
 function rotate(cur,dir){
-   var kickl=[]
+   let kickl=[]
    if (cur[1]==6){
    return [true,cur]
    }else if (cur[1]==0){
@@ -334,7 +343,7 @@ function rotate(cur,dir){
    if (dir=="r"){dir=1;
    }else{dir=-1;
    }
-   for (var i=0;i<kickl.length;i++){
+   for (let i=0;i<kickl.length;i++){
       let tempcur=[[cur[0][0]+kickl[i][0],cur[0][1]+kickl[i][1]],cur[1],(4+cur[2]+dir)%4]
       if (checkpos(tempcur)){
          return [true,tempcur]
@@ -345,8 +354,8 @@ function rotate(cur,dir){
 }
 function putblock(cur){
    shape=blocks[cur[1]][cur[2]]
-   for (var i=0;i<shape.length;i++){
-      for (var j=0;j<shape[i].length;j++){
+   for (let i=0;i<shape.length;i++){
+      for (let j=0;j<shape[i].length;j++){
          if (shape[i][j]!=0){
             let posib=[cur[0][0]+j,cur[0][1]+i]
                board[posib[1]][posib[0]]=shape[i][j]+0
@@ -357,8 +366,8 @@ function putblock(cur){
 
 }
 function rend(cur){
-   for (var i=5;i<board.length;i++){
-      for (var j=0; j<board[i].length;j++){
+   for (let i=5;i<board.length;i++){
+      for (let j=0; j<board[i].length;j++){
          if (board[i][j]==0){
             vboard[i-5][j].style.background="#000"
          }else{
@@ -370,8 +379,8 @@ function rend(cur){
       }
    }
    shape=blocks[cur[1]][cur[2]]
-   for (var i=0;i<shape.length;i++){
-      for (var j=0;j<shape[i].length;j++){
+   for (let i=0;i<shape.length;i++){
+      for (let j=0;j<shape[i].length;j++){
          if (shape[i][j]!=0){
             let posib=[cur[0][0]+j,cur[0][1]+i-5]
             if (posib[1]>=0){
@@ -386,7 +395,7 @@ function rend(cur){
 
 }
 function checklineclear(){
-   var i=0
+   let i=0
    while (i<board.length){
       if (!board[i].includes(0)){
          board.splice(i,1)
@@ -418,12 +427,7 @@ function resetblock(){
     timetouchedfloor=-1
     nextmovetime+=droprate
 }
-var current=[[3,0],getnext(),0]
-var prev=0;
-var elp;
-var nextmovetime;
-var isfloor=false
-var timetouchedfloor=-1
+
 function loop(timestamp){
 
    if (start==undefined){
@@ -450,10 +454,10 @@ function loop(timestamp){
    
    if (keyheld!=0 && elp-timedirpress>das){
       timedirpress+=arr
-      timetouchedfloor=elp
       let temp=[[current[0][0]+keyheld,current[0][1]],current[1],current[2]]
       if (checkpos(temp)){
          current=temp
+      timetouchedfloor=elp
       }   
    }
    }else if (isfloor && elp-timetouchedfloor>lockdelay){
@@ -466,4 +470,3 @@ function loop(timestamp){
    rend(current)
    window.requestAnimationFrame(loop)
 }
-window.requestAnimationFrame(loop)
