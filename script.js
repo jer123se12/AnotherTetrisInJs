@@ -6,12 +6,12 @@ const screensize = [window.innerHeight,window.innerWidth];
 const magnitude=(Math.min(...screensize)/(Math.max(...siz)*2))
 const droprate=50
 const keybinds={
-   "right"  :  "d",
-   "left"   :  "a",
-   "sd"     :  "s",
-   "hd"     :  "w",
-   "r"      :  "KeyL",
-   "l"      :  "KeyK"
+   "right"  :  "KeyD",
+   "left"   :  "KeyA",
+   "sd"     :  "KeyS",
+   "hd"     :  "KeyW",
+   "r"      :  "KeyK",
+   "l"      :  "KeyL"
 
 }
 var vboard=[]
@@ -20,8 +20,23 @@ var start;
 var bag=[0,1,2,3,4,5,6]
 bag=shuffleArray([0,1,2,3,4,5,6])
 bag=[...bag,...shuffleArray([0,1,2,3,4,5,6])]
-
+var keyheld=0
+var timedirpress=0
+const newrow=new Array(siz[0]).fill(0)
 document.addEventListener('keydown', keydown);
+document.addEventListener('keyup', keyup);
+function keyup(e){
+   switch (e.code){
+      case keybinds["right"]:
+         if (keyheld>0){
+            keyheld=0
+         }break;
+      case keybinds["left"]:
+         if (keyheld<0){
+            keyheld=0
+         }break;
+   }
+}
 function keydown(e){
    let key=e.code
    switch (key){
@@ -32,8 +47,12 @@ function keydown(e){
       case keybinds["l"]:
          rotstuff("l")
          break;
-      default:
-         
+      case keybinds["right"]:
+         move("r")
+         break;
+      case keybinds["left"]:
+         move("l")
+         break;
    }
 }
 blocks={
@@ -255,6 +274,20 @@ function load(){
     console.log(board,vboard)
 
 }
+
+function move(dir){
+   if (dir=="r"){
+      keyheld=1
+   }else{
+      keyheld=-1
+   }
+   timedirpress=elp
+   let temp=[[current[0][0]+keyheld,current[0][1]],current[1],current[2]]
+   if (checkpos(temp)){
+      current=temp
+   }
+   
+}
 function checkpos(cur){
    shape=blocks[cur[1]][cur[2]]
    for (var i=0;i<shape.length;i++){
@@ -276,7 +309,7 @@ function rotate(cur,dir){
    if (cur[1]==6){
    return [true,cur]
    }else if (cur[1]==0){
-      kickl=wallkick[1][dir][cur[2]]
+      kickl=wallkick[0][dir][cur[2]]
    }else{
       kickl=wallkick[1][dir][cur[2]]
    }
@@ -328,6 +361,18 @@ function rend(cur){
    }
 
 }
+function checklineclear(){
+   var i=0
+   while (i<board.length){
+      if (!board[i].includes(0)){
+         console.log(board)
+         board.splice(i,1)
+         board.unshift(newrow)
+         console.log(board)
+      }
+      i++
+   }
+}
 function rotstuff(dir){
    let temp=rotate(current,dir)
    if (temp[0]){
@@ -370,9 +415,19 @@ function loop(timestamp){
       }
       nextmovetime+=droprate
       
+   
+   if (keyheld!=0 && elp-timedirpress>das){
+      timedirpress+=arr
+      timetouchedfloor=elp
+      let temp=[[current[0][0]+keyheld,current[0][1]],current[1],current[2]]
+      if (checkpos(temp)){
+         current=temp
+      }   
+   }
    }else if (isfloor && elp-timetouchedfloor>lockdelay){
       putblock(current)
       resetblock()
+      checklineclear()
    }
    prev=elp + 0
 
