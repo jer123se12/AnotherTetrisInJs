@@ -1,4 +1,5 @@
 .grid{
+    border: 1px solid #aaa;
     background: #000;
 }
 .row{
@@ -13,9 +14,37 @@
 }
 
 .b1{
-    background: #fff;
+    background: #00ffff;
+    border:1px solid #00ffff;
 }
-
+.b2{
+    background: #800080;
+    border:1px solid #800080;
+}
+.b3{
+    background: #ff0000;
+    border:1px solid #ff0000;
+}
+.b4{
+    background: #00ff00;
+    border:1px solid #00ff00;
+}
+.b5{
+    background: #0000ff;
+    border:1px solid #0000ff;
+}
+.b6{
+    background: #ff7f00;
+    border:1px solid #ff7f00;
+}
+.b7{
+    background: #ffff00;
+    border:1px solid #ffff00;
+}
+.ho{
+    background: #ccc;
+    border:1px solid #ccc;
+}
 .mainFrame {
     display: flex;
     flex-direction: column;

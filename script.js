@@ -3,7 +3,7 @@ const lockdelay=500
 const das=120
 const arr=20
 const screensize = [window.innerHeight,window.innerWidth];
-const magnitude=(Math.min(...screensize)/(Math.max(...siz)*2))
+const magnitude=(Math.min(...screensize)/(Math.max(...siz)))
 const droprate=500
 const sdr=50
 const newrow=new Array(siz[0]).fill(0)
@@ -14,13 +14,16 @@ const keybinds={
    "sd"     :  "KeyS",
    "hd"     :  "KeyW",
    "r"      :  "KeyK",
-   "l"      :  "KeyL"
+   "l"      :  "KeyL",  
+   "hold"   :  "Space"
 
 }
 let softdrop=false
 let softdroptime=0
 let vboard=[]
 let board=[]
+let hold=-1
+let canhold=true
 let start;
 let bag=[0,1,2,3,4,5,6]
 bag=shuffleArray([0,1,2,3,4,5,6])
@@ -86,11 +89,29 @@ function keydown(e){
       case keybinds["left"]:
          move("l")
          break;
+      case keybinds["hold"]:
+         if (canhold){
+            canhold=false
+            if (hold<0){
+               hold =current[1]
+               resetblock()
+               
+            }else{
+               let temp=current[1]
+               //hold=current
+               current=[[3,4],hold,0]
+               hold=temp
+            }
+         }else{
+            
+         }
+         break;   
       case keybinds["hd"]:
          current=hd()
          putblock(current)
          resetblock()
          checklineclear()
+         canhold=true
          break
    }
 }
@@ -239,38 +260,36 @@ const blocks={
         ],
     ]
 }
-
-const wallkick=[
+wallkick=[
 {
    "r":[
-      [[0,0],[-2,0],[1,0],[-2,1],[1,-2]],
-      [[0,0],[-1,0],[2,0],[-1,-2],[2,1]],
-      [[0,0],[2,0],[-1,0],[2,-1],[-1,2]],
-      [[0,0],[1,0],[-2,0],[1,2],[-2,-1]],
-      ],
+      [[0,0],[-2,0],[1,0],[-2,-1],[1,2]],
+      [[0,0],[-1,0],[2,0],[-1,2],[2,-1]],
+      [[0,0],[2,0],[-1,0],[2,1],[-1,-2]],
+      [[0,0],[1,0],[-2,0],[1,-2],[-2,1]],
+   ],
    "l":[
-      [[0,0],[2,0],[-1,0],[2,-1],[-1,2]],
-      [[0,0],[1,0],[-2,0],[1,2],[-2,-1]],
-      [[0,0],[-2,0],[1,0],[-2,1],[1,-2]],
-      [[0,0],[-1,0],[2,0],[-1,-2],[2,1]],
-      ],
+      [[0,0],[-1,0],[2,0],[-1,2],[2,-1]],
+      [[0,0],[2,0],[-1,0],[2,1],[-1,-2]],
+      [[0,0],[1,0],[-2,0],[1,-2],[-2,1]],
+      [[0,0],[-2,0],[1,0],[-2,-1],[1,2]],
+   ],
 },
 {
    "r":[
-      [[0,0],[-1,0],[-1,-1],[0,2],[-1,2]],
-      [[0,0],[1,0],[1,1],[0,-2],[1,-2]],
-      [[0,0],[1,0],[1,-1],[0,2],[1,2]],
       [[0,0],[-1,0],[-1,1],[0,-2],[-1,-2]],
-      ],
+      [[0,0],[1,0],[1,-1],[0,2],[1,2]],
+      [[0,0],[1,0],[1,1],[0,-2],[1,-2]],
+      [[0,0],[-1,0],[-1,-1],[0,+2],[-1,2]],
+   ],
    "l":[
       [[0,0],[1,0],[1,1],[0,-2],[1,-2]],
-      [[0,0],[-1,0],[-1,-1],[0,2],[-1,2]],
-      [[0,0],[-1,0],[-1,1],[0,-2],[-1,-2]],
       [[0,0],[1,0],[1,-1],[0,2],[1,2]],
-      ],
+      [[0,0],[-1,0],[-1,1],[0,-2],[-1,-2]],
+      [[0,0],[-1,0],[-1,-1],[0,2],[-1,2]],
+   ],
 }
 ]
-
 function shuffleArray(array) {
    for (let i = array.length - 1; i > 0; i--) {
       let j = Math.floor(Math.random() * (i + 1));
@@ -369,8 +388,9 @@ function rotate(cur,dir){
    if (dir=="r"){dir=1;
    }else{dir=-1;
    }
+   console.log(cur,kickl)
    for (let i=0;i<kickl.length;i++){
-      let tempcur=[[cur[0][0]+kickl[i][0],cur[0][1]+kickl[i][1]],cur[1],(4+cur[2]+dir)%4]
+      let tempcur=[[cur[0][0]+kickl[i][0],cur[0][1]-kickl[i][1]],cur[1],(4+cur[2]+dir)%4]
       if (checkpos(tempcur)){
          return [true,tempcur]
       }
@@ -395,9 +415,9 @@ function rend(cur){
    for (let i=5;i<board.length;i++){
       for (let j=0; j<board[i].length;j++){
          if (board[i][j]==0){
-            vboard[i-5][j].style.background="#000"
+            vboard[i-5][j].className="grid"
          }else{
-            vboard[i-5][j].style.background=blockColor[board[i][j]]
+            vboard[i-5][j].className=`grid b${board[i][j]}`//style.background=blockColor[board[i][j]]
             if (blockColor[board[i][j]]===undefined) {
                 console.log(board[i][j])
             }
@@ -411,7 +431,7 @@ function rend(cur){
          if (shape[i][j]!=0){
             let posib=[h[0][0]+j,h[0][1]+i-5]
             if (posib[1]>=0){
-               vboard[posib[1]][posib[0]].style.background="#ccc"
+               vboard[posib[1]][posib[0]].className=`grid ho`
                if (blockColor[shape[i][j]]===undefined) {
                 console.log(shape[i][j])
             }
@@ -425,7 +445,7 @@ function rend(cur){
          if (shape[i][j]!=0){
             let posib=[cur[0][0]+j,cur[0][1]+i-5]
             if (posib[1]>=0){
-               vboard[posib[1]][posib[0]].style.background=blockColor[shape[i][j]]
+               vboard[posib[1]][posib[0]].className=`grid b${shape[i][j]}`
                if (blockColor[shape[i][j]]===undefined) {
                 console.log(shape[i][j])
             }
@@ -433,7 +453,9 @@ function rend(cur){
          }
       }
    }
-   
+   //rendhold()
+   //rendnext()
+
 
 }
 function checklineclear(){
@@ -520,6 +542,7 @@ function loop(timestamp){
       putblock(current)
       resetblock()
       checklineclear()
+      canhold=true
    }
    prev=elp + 0
 
