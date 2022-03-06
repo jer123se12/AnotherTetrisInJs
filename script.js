@@ -77,8 +77,10 @@ function keydown(e){
          rotstuff("r")
          break;
       case keybinds["sd"]:
+         if (!softdrop){
          softdrop=true
          softdroptime=elp
+         }
          break;
       case keybinds["l"]:
          rotstuff("l")
@@ -308,7 +310,7 @@ function getnext(){
 }
 vhold=[]
 function loadhold(){
-   let gridhtml=(size,x,y)=>`<div class="" id="h${x} ${y}" style="width: ${size}px; height: ${size}px"></div>`
+   let gridhtml=(size,x,y)=>`<div class="empty" id="h${x} ${y}" style="width: ${size}px; height: ${size}px"></div>`
    let outer=document.getElementById("hold")
    let content=""
    for (let i=0;i<4;i++){
@@ -490,7 +492,7 @@ function rendhold(){
    shape=blocks[hold][0]
    for (let i=0;i<vhold.length;i++){
       for (let j=0;j<vhold[0].length;j++){
-         vhold[i][j].className=''
+         vhold[i][j].className='empty'
       }
    }
    for (let i=0;i<shape.length;i++){
@@ -552,6 +554,7 @@ function loop(timestamp){
    elp=timestamp-start
    if (!softdrop && elp-nextmovetime>=droprate){
       //drop the block one
+      console.log("here")
       
       if (checkpos([[current[0][0],current[0][1]+1],current[1],current[2]])){
          //move down
@@ -566,6 +569,7 @@ function loop(timestamp){
       }
       nextmovetime+=droprate
    }else if (softdrop && elp-softdroptime>sdr){
+      console.log("hello")
       if (checkpos([[current[0][0],current[0][1]+1],current[1],current[2]])){
          //move down
          current[0][1]+=1

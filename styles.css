@@ -15,6 +15,9 @@
     background-color: transparent;
 
 }
+.empty{
+   border: 1px solid rgba(255,255,255,0);
+}
 body{
    background-image: url("https://preview.redd.it/8qbvx93bdml81.png?width=960&crop=smart&auto=webp&s=11251618dfd938b3c9b9563fd21046814e6f825c")
 }
