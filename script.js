@@ -3,7 +3,7 @@ const lockdelay=500
 const das=120
 const arr=20
 const screensize = [window.innerHeight,window.innerWidth];
-const magnitude=(Math.min(...screensize)/(Math.max(...siz)))
+const magnitude=(Math.min(...screensize)/(Math.max(...siz)*1.1))
 const droprate=500
 const sdr=50
 const newrow=new Array(siz[0]).fill(0)
@@ -306,6 +306,30 @@ function getnext(){
    }
    return bag.shift()
 }
+vhold=[]
+function loadhold(){
+   let gridhtml=(size,x,y)=>`<div class="" id="h${x} ${y}" style="width: ${size}px; height: ${size}px"></div>`
+   let outer=document.getElementById("hold")
+   let content=""
+   for (let i=0;i<4;i++){
+        content+="<div class=\"row\">"
+        for (let j=0;j<4;j++){
+            content+=gridhtml(magnitude/1.5,i,j)
+        }
+        content+="</div>"
+    }
+    outer.innerHTML=content
+    for (let i=0;i<4;i++){
+      vhold.push([])
+      for(let j=0;j<4;j++){
+         vhold[i].push(document.getElementById(`h${i} ${j}`))
+
+      }
+
+    }
+
+
+}
 function load(){
     gridhtml=(size,x,y)=>`<div class="grid " id="${x} ${y}" style="width: ${size}px; height: ${size}px"></div>`
 
@@ -331,6 +355,7 @@ function load(){
 
     }
     console.log(board,vboard)
+    loadhold()
 window.requestAnimationFrame(loop)
 
 }
@@ -453,10 +478,34 @@ function rend(cur){
          }
       }
    }
-   //rendhold()
+   rendhold()
    //rendnext()
 
 
+}
+function rendhold(){
+   if (hold==-1){
+      return 
+   }
+   shape=blocks[hold][0]
+   for (let i=0;i<vhold.length;i++){
+      for (let j=0;j<vhold[0].length;j++){
+         vhold[i][j].className=''
+      }
+   }
+   for (let i=0;i<shape.length;i++){
+      for (let j=0;j<shape[i].length;j++){
+         if (shape[i][j]!=0){
+            let posib=[j,i]
+            if (posib[1]>=0){
+               vhold[posib[1]][posib[0]].className=`grid b${shape[i][j]}`
+               if (blockColor[shape[i][j]]===undefined) {
+                console.log(shape[i][j])
+            }
+            }
+         }
+      }
+   }
 }
 function checklineclear(){
    let i=0
@@ -476,7 +525,8 @@ function checklineclear(){
    elementNum += 1
    console.log(board[4],newrow,board[4]!=newrow)
    if (board[4].reduce((a, b) => a + b, 0)!=0) {
-       alert("Game Over!")
+      load()
+      console.log("DIE")
    }
 }
 function rotstuff(dir){
@@ -520,6 +570,8 @@ function loop(timestamp){
          //move down
          current[0][1]+=1
          isfloor=false
+         console.log("what")
+      softdroptime+=sdr
 
       }else{
          if (!isfloor){
@@ -527,7 +579,6 @@ function loop(timestamp){
             timetouchedfloor=elp+0
          }  
       }
-      softdroptime+=sdr
    }
    
    if (keyheld!=0 && elp-timedirpress>das){

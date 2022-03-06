@@ -1,4 +1,5 @@
 .grid{
+    opacity: 0.3;
     border: 1px solid #aaa;
     background: #000;
 }
@@ -6,42 +7,54 @@
     display: flex;
     flex-direction: row;
 }
-.board{
-    width: 50%;
+#board{
     margin: auto;
     display: flex;
     flex-direction: column;
-}
+    border: 5px solid #fff;
+    background-color: transparent;
 
+}
+body{
+   background-image: url("https://preview.redd.it/8qbvx93bdml81.png?width=960&crop=smart&auto=webp&s=11251618dfd938b3c9b9563fd21046814e6f825c")
+}
 .b1{
+    opacity: 1;
     background: #00ffff;
     border:1px solid #00ffff;
 }
 .b2{
+    opacity: 1;
     background: #800080;
     border:1px solid #800080;
 }
 .b3{
+    opacity: 1;
     background: #ff0000;
     border:1px solid #ff0000;
 }
 .b4{
+    opacity: 1;
     background: #00ff00;
     border:1px solid #00ff00;
 }
 .b5{
+    opacity: 1;
     background: #0000ff;
     border:1px solid #0000ff;
 }
 .b6{
+    opacity: 1;
     background: #ff7f00;
     border:1px solid #ff7f00;
 }
 .b7{
+    opacity: 1;
     background: #ffff00;
     border:1px solid #ffff00;
 }
 .ho{
+    opacity: 0.7;
     background: #ccc;
     border:1px solid #ccc;
 }
