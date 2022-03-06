@@ -3,7 +3,7 @@ const lockdelay=500
 const das=120
 const arr=20
 const screensize = [window.innerHeight,window.innerWidth];
-const magnitude=(Math.min(...screensize)/(Math.max(...siz)*1.1))
+const magnitude=(Math.min(...screensize)/(Math.max(...siz)*1.2))
 const droprate=500
 const sdr=50
 const newrow=new Array(siz[0]).fill(0)
@@ -540,6 +540,7 @@ function rotstuff(dir){
 }
 function resetblock(){
     current=[[3,4],getnext(),0]
+   softdroptime=elp
     isfloor=false
     timetouchedfloor=-1
     nextmovetime+=droprate
@@ -575,7 +576,6 @@ function loop(timestamp){
          current[0][1]+=1
          isfloor=false
          console.log("what")
-      softdroptime+=sdr
 
       }else{
          if (!isfloor){
@@ -583,6 +583,7 @@ function loop(timestamp){
             timetouchedfloor=elp+0
          }  
       }
+      softdroptime+=sdr
    }
    
    if (keyheld!=0 && elp-timedirpress>das){
