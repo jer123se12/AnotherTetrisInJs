@@ -333,8 +333,36 @@ function loadhold(){
             }
 
       }
+      console.log(board)
 
 
+}
+let vnext=[]
+function loadnext(){
+   let gridhtml=(size,x,y,n)=>`<div class="empty" id="n${n} ${x} ${y}" style="width: ${size}px; height: ${size}px"></div>`
+   let outer=document.getElementById("next")
+   let content=""
+   for (let n=0;n<5;n++){
+      content+="<div>"
+      for (let y=0;y<4;y++){
+         content+="<div class=\"row\">"
+         for (let x=0;x<4;x++){
+            content+=gridhtml(magnitude/1.5,x,y,n)
+         }
+         content+="</div>"
+      }
+      content+="</div>"
+   }
+   outer.innerHTML=content
+   for (let n=0;n<5;n++){
+      vnext.push([])
+      for (let y=0;y<4;y++){
+         vnext[n].push([])
+         for (let x=0;x<4;x++){
+               vnext[n][y].push(document.getElementById(`n${n} ${x} ${y}`))
+         }
+      }
+   }
 }
 function load(){
    gridhtml=(size,x,y)=>`<div class="grid " id="${x} ${y}" style="width: ${size}px; height: ${size}px"></div>`
@@ -362,6 +390,7 @@ function load(){
       }
    console.log(board,vboard)
       loadhold()
+      loadnext()
       window.requestAnimationFrame(loop)
 
 }
@@ -430,6 +459,7 @@ function rotate(cur,dir){
 
 }
 function putblock(cur){
+   console.log(cur)
    shape=blocks[cur[1]][cur[2]]
       for (let i=0;i<shape.length;i++){
          for (let j=0;j<shape[i].length;j++){
@@ -479,7 +509,7 @@ function rend(cur){
          }
       }
    rendhold()
-      //rendnext()
+      rendnext()
 
 
 }
@@ -499,14 +529,37 @@ function rendhold(){
             let posib=[j,i]
                if (posib[1]>=0){
                   vhold[posib[1]][posib[0]].className=`grid b${shape[i][j]}`
-                  vhold[posib[1]][posib[0]].style.opacity="1"
-                  if (!canhold){
-                     vhold[posib[1]][posib[0]].style.opacity="0.5"
-                  }
+                     vhold[posib[1]][posib[0]].style.opacity="1"
+                     if (!canhold){
+                        vhold[posib[1]][posib[0]].style.opacity="0.5"
+                     }
                }
          }
       }
    }
+}
+function rendnext(){
+for (let n=0;n<vnext.length;n++){
+   for (let i=0;i<vnext[0].length;i++){
+         for (let j=0;j<vnext[0][0].length;j++){
+            vnext[n][i][j].className='empty'
+      }
+   }
+   }
+for (let n=0;n<vnext.length;n++){
+   shape=blocks[bag[n]][0]
+  console.log(shape) 
+   for (let i=0;i<shape.length;i++){
+      for (let j=0;j<shape[i].length;j++){
+         if (shape[i][j]!=0){
+            let posib=[j,i]
+               if (posib[1]>=0){
+                  vnext[n][posib[1]][posib[0]].className=`grid b${shape[i][j]}`
+               }
+         }
+      }
+   }
+}
 }
 function checklineclear(){
    let i=0
