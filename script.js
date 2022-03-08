@@ -31,7 +31,7 @@ bag=shuffleArray([0,1,2,3,4,5,6])
    bag=[...bag,...shuffleArray([0,1,2,3,4,5,6])]
    let keyheld=0
    let timedirpress=0
-   let current=[[3,0],getnext(),0]
+   let current=[[3,2],getnext(),0]
    let prev=0;
    let elp;
    let nextmovetime;
@@ -140,7 +140,7 @@ function keydown(e){
                   }else{
                      let temp=current[1]
                         //hold=current
-                        current=[[3,4],hold,0]
+                        current=[[3,2],hold,0]
                         hold=temp
                   }
             }else{
@@ -435,7 +435,8 @@ function load(){
       }
    outer.innerHTML=content
       for (let i=0;i<siz[1]+5;i++){
-         vboard.push([])
+         if (i<siz[1]){
+         vboard.push([])}
             board.push([])
             for (let j=0;j<siz[0];j++){
                board[i].push(0)
@@ -517,16 +518,21 @@ function rotate(cur,dir){
 
 }
 function putblock(cur){
+
+   console.log(JSON.parse(JSON.stringify(board)))
    shape=blocks[cur[1]][cur[2]]
       for (let i=0;i<shape.length;i++){
          for (let j=0;j<shape[i].length;j++){
+            
             if (shape[i][j]!=0){
                let posib=[cur[0][0]+j,cur[0][1]+i]
-                  board[posib[1]][posib[0]]=shape[i][j]+0
+               
+               console.log(JSON.parse(JSON.stringify(posib)),JSON.parse(JSON.stringify(board[posib[1]][posib[0]])),JSON.parse(JSON.stringify(cur)))
+                  board[posib[1]][posib[0]]=shape[i][j]
             }
          }
       }
-
+      console.log(JSON.parse(JSON.stringify(board)))
 
 }
 function rend(cur){
@@ -619,10 +625,11 @@ for (let n=0;n<vnext.length;n++){
 }
 function checklineclear(){
    let i=0
+
       while (i<board.length){
          if (!board[i].includes(0)){
             board.splice(i,1)
-               board.unshift(newrow)
+               board.unshift(JSON.parse(JSON.stringify(newrow)))
                score += 10 + (multiplier * 5)
                if (multiplier == maxMul) {
                   multiplier += 1
@@ -632,6 +639,7 @@ function checklineclear(){
          i++
       }
       elementNum += 1
+      
       if (board[4].reduce((a, b) => a + b, 0)!=0) {
          load()
             console.log("DIE")
@@ -645,7 +653,7 @@ function rotstuff(dir){
       }
 }
 function resetblock(){
-   current=[[3,4],getnext(),0]
+   current=[[3,2],getnext(),0]
       softdroptime=elp
       isfloor=false
       timetouchedfloor=-1
@@ -722,3 +730,10 @@ function loop(timestamp){
       rend(current)
       window.requestAnimationFrame(loop)
 }
+document.addEventListener("visibilitychange", (event) => {
+   if (document.visibilityState == "visible") {
+     tgplay()
+   } else {
+     tgplay()
+   }
+ });
