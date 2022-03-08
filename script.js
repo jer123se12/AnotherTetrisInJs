@@ -6,9 +6,10 @@ const arr=20
 const magnitude=(Math.min(...screensize)/(Math.max(...siz)*1.2))
    const droprate=500
    const sdr=50
+   let setkey=""
 const newrow=new Array(siz[0]).fill(0)
    const holdamount=5
-   const keybinds={
+   let keybinds={
       "right"  :  "KeyD",
       "left"   :  "KeyA",
       "sd"     :  "KeyS",
@@ -53,8 +54,32 @@ bag=shuffleArray([0,1,2,3,4,5,6])
             load()
             })
    }
-
+function setCookie(cname, cvalue, exdays) {
+  const d = new Date();
+  d.setTime(d.getTime() + (exdays*24*60*60*1000));
+  let expires = "expires="+ d.toUTCString();
+  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+function getCookie(cname) {
+  let name = cname + "=";
+  let decodedCookie = decodeURIComponent(document.cookie);
+  let ca = decodedCookie.split(';');
+  for(let i = 0; i <ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}
 function keyup(e){
+   if (!play){
+      
+      return
+   }
    switch (e.code){
       case keybinds["right"]:
          if (keyheld>0){
@@ -70,10 +95,20 @@ function keyup(e){
    }
 }
 function keydown(e){
+   if (!play){
+      if (!setkey==""){
+         setCookie(setkey,e.code,1000)
+            
+         loadKeybinds()
+         console.log(`ctrl${setkey}`)
+         document.getElementById(`ctrl${setkey}`).innerHTML=e.code
+         setkey=""
+      }
+      return
+   }
    let key=e.code
       switch (key){
          case keybinds["r"]:
-            console.log("hiii")
                rotstuff("r")
                break;
          case keybinds["sd"]:
@@ -333,7 +368,6 @@ function loadhold(){
             }
 
       }
-      console.log(board)
 
 
 }
@@ -364,7 +398,30 @@ function loadnext(){
       }
    }
 }
+function setDefaultKeybinds(){
+   for(let key of Object.keys(keybinds)){
+      setCookie(key,keybinds[key],1000)
+
+   }
+
+}
+function loadKeybinds(){
+   for(let key of Object.keys(keybinds)){
+      keybinds[key]=getCookie(key)
+      document.getElementById(`ctrl${key}`).innerHTML=keybinds[key]
+   }
+   console.log(keybinds)
+
+}
+let play=false
 function load(){
+   if (getCookie("hold")==""){
+      setDefaultKeybinds()
+      console.log(keybinds)
+   }
+   loadKeybinds()
+      console.log(keybinds)
+   
    gridhtml=(size,x,y)=>`<div class="grid " id="${x} ${y}" style="width: ${size}px; height: ${size}px"></div>`
 
       let outer=document.getElementById("board")
@@ -388,9 +445,11 @@ function load(){
             }
 
       }
+
    console.log(board,vboard)
       loadhold()
       loadnext()
+      play=true
       window.requestAnimationFrame(loop)
 
 }
@@ -448,7 +507,6 @@ function rotate(cur,dir){
    if (dir=="r"){dir=1;
    }else{dir=-1;
    }
-   console.log(cur,kickl)
       for (let i=0;i<kickl.length;i++){
          let tempcur=[[cur[0][0]+kickl[i][0],cur[0][1]-kickl[i][1]],cur[1],(4+cur[2]+dir)%4]
             if (checkpos(tempcur)){
@@ -459,7 +517,6 @@ function rotate(cur,dir){
 
 }
 function putblock(cur){
-   console.log(cur)
    shape=blocks[cur[1]][cur[2]]
       for (let i=0;i<shape.length;i++){
          for (let j=0;j<shape[i].length;j++){
@@ -548,7 +605,6 @@ for (let n=0;n<vnext.length;n++){
    }
 for (let n=0;n<vnext.length;n++){
    shape=blocks[bag[n]][0]
-  console.log(shape) 
    for (let i=0;i<shape.length;i++){
       for (let j=0;j<shape[i].length;j++){
          if (shape[i][j]!=0){
@@ -575,9 +631,7 @@ function checklineclear(){
          }
          i++
       }
-   console.log(board)
       elementNum += 1
-      console.log(board[4],newrow,board[4]!=newrow)
       if (board[4].reduce((a, b) => a + b, 0)!=0) {
          load()
             console.log("DIE")
@@ -597,17 +651,27 @@ function resetblock(){
       timetouchedfloor=-1
       nextmovetime+=droprate
 }
-
+let lastpaused=0
+function tgplay(){
+   play=!play
+   if (play){
+      console.log(elp,lastpaused)
+      start=start+(actualelp-elp)
+      console.log(start)
+   }
+   return play
+}
+let actualelp=0
 function loop(timestamp){
-
    if (start==undefined){
       start=timestamp 
          nextmovetime=droprate
    }
-   elp=timestamp-start
+   actualelp=timestamp-start
+   if (play){elp=timestamp-start}
+   
       if (!softdrop && elp-nextmovetime>=droprate){
          //drop the block one
-         console.log("here")
 
             if (checkpos([[current[0][0],current[0][1]+1],current[1],current[2]])){
                //move down
@@ -622,12 +686,10 @@ function loop(timestamp){
             }
          nextmovetime+=droprate
       }else if (softdrop && elp-softdroptime>sdr){
-         console.log("hello")
             if (checkpos([[current[0][0],current[0][1]+1],current[1],current[2]])){
                //move down
                current[0][1]+=1
                   isfloor=false
-                  console.log("what")
 
             }else{
                if (!isfloor){
@@ -652,8 +714,8 @@ function loop(timestamp){
          checklineclear()
          canhold=true
    }
-   if (prev>elp+1000){
-      st=timestamp-prev
+   if (elp-prev>1000){
+      console.log("wierd time diff")
    }
    prev=elp + 0
 

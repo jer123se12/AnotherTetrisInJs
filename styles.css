@@ -7,6 +7,33 @@
     display: flex;
     flex-direction: row;
 }
+.griditem{
+    align-self: center;
+    left:0%;
+
+}
+.rebind{
+    display: flex;
+    justify-content: center;
+    border: 1px solid #fff;
+    height: 2rem;
+    align-self: center;
+    background-color:#000;
+    align-items: center;
+}
+#overlay {
+  position: fixed; /* Sit on top of the page content */
+  display: none; /* Hidden by default */
+  width: 100%; /* Full width (cover the whole page) */
+  height: 100%; /* Full height (cover the whole page) */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  justify-content: center;
+  background-color: rgba(0,0,0,0.5); /* Black background with opacity */
+  z-index: 100; /* Specify a stack order in case you're using a different order for other elements */
+}
 #board{
     margin: auto;
     display: flex;
@@ -26,6 +53,8 @@
    height: fit-content;
 }
 body{
+    font-family: 'Ubuntu', sans-serif;
+    color: #fff;
    background-image: url("https://preview.redd.it/8qbvx93bdml81.png?width=960&crop=smart&auto=webp&s=11251618dfd938b3c9b9563fd21046814e6f825c"); 
 }
 #hold{
