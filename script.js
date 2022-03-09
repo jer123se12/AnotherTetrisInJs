@@ -10,13 +10,13 @@ const magnitude=(Math.min(...screensize)/(Math.max(...siz)*1.2))
 const newrow=new Array(siz[0]).fill(0)
    const holdamount=5
    let keybinds={
-      "right"  :  "KeyD",
-      "left"   :  "KeyA",
-      "sd"     :  "KeyS",
-      "hd"     :  "KeyW",
-      "r"      :  "KeyK",
-      "l"      :  "KeyL",  
-      "hold"   :  "Space"
+      "right"  :  "ArrowRight",
+      "left"   :  "ArrowLeft",
+      "sd"     :  "ArrowDown",
+      "hd"     :  "Space",
+      "r"      :  "ArrowUp",
+      "l"      :  "KeyZ",  
+      "hold"   :  "KeyC"
 
    }
 let softdrop=false
