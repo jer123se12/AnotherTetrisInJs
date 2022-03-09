@@ -21,6 +21,10 @@
     background-color:#000;
     align-items: center;
 }
+#motionTop{width:100px}
+#motionBottom{width:100px}
+#motionRight{width:100px}
+#motionLeft{width:100px}
 #overlay {
   position: fixed; /* Sit on top of the page content */
   display: none; /* Hidden by default */

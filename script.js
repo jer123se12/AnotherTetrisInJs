@@ -3,7 +3,7 @@ const lockdelay=500
 const das=120
 const arr=20
    const screensize = [window.innerHeight,window.innerWidth]
-const magnitude=(Math.min(...screensize)/(Math.max(...siz)*1.2))
+const magnitude=(Math.min(...screensize)/(Math.max(...siz)*1.5))
    const droprate=500
    const sdr=50
    let setkey=""
@@ -27,6 +27,9 @@ let hold=-1
 let canhold=true
 let start
    let bag=[0,1,2,3,4,5,6]
+let vnext=[]
+let position=[0,0]
+let velocity=[0,0]
 bag=shuffleArray([0,1,2,3,4,5,6])
    bag=[...bag,...shuffleArray([0,1,2,3,4,5,6])]
    let keyheld=0
@@ -148,7 +151,9 @@ function keydown(e){
             }
             break;   
          case keybinds["hd"]:
-            current=hd()
+            let temp=hd()
+            position[1]-=(temp[0][1]-current[0][1])*2
+            current=temp
                putblock(current)
                resetblock()
                checklineclear()
@@ -371,7 +376,7 @@ function loadhold(){
 
 
 }
-let vnext=[]
+
 function loadnext(){
    let gridhtml=(size,x,y,n)=>`<div class="empty" id="n${n} ${x} ${y}" style="width: ${size}px; height: ${size}px"></div>`
    let outer=document.getElementById("next")
@@ -451,10 +456,37 @@ function load(){
       loadhold()
       loadnext()
       play=true
+      
+      setpad()
+      
       window.requestAnimationFrame(loop)
 
 }
+let paddingsize=magnitude*2
+function setpad(){
+   padding={
+         "top":document.getElementById("motionTop"),
+         "bottom":document.getElementById("motionBottom"),
+         "right":document.getElementById("motionRight"),
+         "left":document.getElementById("motionLeft"),
+      }
+      console.log(padding)
+   padding["top"].style.height=`${paddingsize}px`
+   padding["bottom"].style.height=`${paddingsize}px`
 
+   padding["right"].style.width=`${paddingsize}px`
+   padding["left"].style.width=`${paddingsize}px`
+}
+let padding={
+}
+
+function setposition(pos){
+   let size=paddingsize
+   padding["top"].style.height=`${size-pos[1]}px`
+   padding["bottom"].style.height=`${size+pos[1]}px`
+   padding["right"].style.width=`${size+pos[0]}px`
+   padding["right"].style.width=`${size-pos[0]}px`
+}
 function hd(){
    let temp=current
       while (true){
@@ -477,6 +509,8 @@ function move(dir){
       if (checkpos(temp)){
          current=temp
             timetouchedfloor=elp
+      }else{
+         position[0]+=keyheld*5
       }
 
 }
@@ -676,7 +710,13 @@ function loop(timestamp){
          nextmovetime=droprate
    }
    actualelp=timestamp-start
-   if (play){elp=timestamp-start}
+   if (play){
+   elp=timestamp-start;
+   position=[(position[0]*0.95),(position[1]*0.95)];
+   if (Math.abs(position[0])<0.01){position[0]=0}
+   if (Math.abs(position[1])<0.01){position[1]=0}
+   
+   }
    
       if (!softdrop && elp-nextmovetime>=droprate){
          //drop the block one
@@ -703,7 +743,9 @@ function loop(timestamp){
                if (!isfloor){
                   isfloor=true
                      timetouchedfloor=elp+0
-               }  
+               }else{
+                  position[1]-=3
+               }
             }
          softdroptime+=sdr
       }
@@ -714,7 +756,8 @@ function loop(timestamp){
          if (checkpos(temp)){
             current=temp
                timetouchedfloor=elp
-         }   
+         }  else{ 
+         position[0]+=keyheld*5}
    }
    if (isfloor && elp-timetouchedfloor>lockdelay){
       putblock(current)
@@ -726,12 +769,13 @@ function loop(timestamp){
       console.log("wierd time diff")
    }
    prev=elp + 0
-
+setposition(position)
+   
       rend(current)
       window.requestAnimationFrame(loop)
 }
 document.addEventListener("visibilitychange", (event) => {
-   if (document.visibilityState == "visible") {
+   if (document.visibilityState == "visible" ) {
      tgplay()
    } else {
      tgplay()
