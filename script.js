@@ -11,24 +11,38 @@ const magnitude=(Math.min(...screensize)/(Math.max(...siz)*1.5))
    let setkey=""
 const sounds={
    "combo":[
-   new Audio("combo_1.wav"),
-   new Audio("combo_2.wav"),
-   new Audio("combo_3.wav"),
-   new Audio("combo_4.wav"),
-   new Audio("combo_5.wav"),
-   new Audio("combo_6.wav"),
-   new Audio("combo_7.wav"),
-   new Audio("combo_8.wav")
+   "combo_1.wav",
+   "combo_2.wav",
+   "combo_3.wav",
+   "combo_4.wav",
+   "combo_5.wav",
+   "combo_6.wav",
+   "combo_7.wav",
+   "combo_8.wav"
    ],
-   "combobreak":new Audio("combobreak.wav"),
-   "hd":new Audio("harddrop.wav"),
-   "move":new Audio("move.wav"),
-   "rotate":new Audio("rotate.wav"),
-   "hold":new Audio("hold.wav")
+   "combobreak":  "combobreak.wav",
+   "hd":          "harddrop.wav",
+   "move":        "move.wav",
+   "rotate":      "rotate.wav",
+   "hold":        "hold.wav"
 
    
 
 }
+function playsound(name,item=-1){
+     
+   audio = document.createElement("audio");
+   if (item>=0){
+
+   audio.src=`./${sounds[name][item]}`
+   }else{
+   audio.src=`./${sounds[name]}`}
+   audio.addEventListener("ended", function () {
+               document.removeChild(this);
+                       }, false);
+   audio.play()
+}
+
 const newrow=new Array(siz[0]).fill(0)
    const holdamount=5
    let keybinds={
@@ -157,7 +171,7 @@ function keydown(e){
                break;
          case keybinds["hold"]:
             if (canhold){
-               sounds["hold"].play()
+               playsound("hold")
                canhold=false
                   if (hold<0){
                      hold =current[1]
@@ -181,7 +195,7 @@ function keydown(e){
                resetblock()
                checklineclear()
                canhold=true
-               sounds["hd"].play()
+               playsound("hd")
                break
       }
 }
@@ -531,7 +545,7 @@ function move(dir){
    timedirpress=elp
       let temp=[[current[0][0]+keyheld,current[0][1]],current[1],current[2]]
       if (checkpos(temp)){
-               sounds["move"].play()
+               playsound("move")
          current=temp
             timetouchedfloor=elp
       }else{
@@ -571,7 +585,7 @@ function rotate(cur,dir){
          let tempcur=[[cur[0][0]+kickl[i][0],cur[0][1]-kickl[i][1]],cur[1],(4+cur[2]+dir)%4]
             if (checkpos(tempcur)){
 
-               sounds["rotate"].play()
+               playsound("rotate")
                return [true,tempcur]
             }
       }
@@ -705,16 +719,16 @@ function checklineclear(){
       if (linecleared>0){
          combocount+=1
          if (combocount<9){
-            sounds["combo"][combocount-1].play()
+            playsound("combo",combocount-1)
          }else{
-            sounds["combo"][7].play()
+            playsound("combo",7)
          }
       }else{
          if (combocount>0){
-            sounds["combobreak"].play()
+            playsound("combobreak")
          }            
 
-         combocound=0
+         combocount=0
          
          
       }
@@ -780,7 +794,7 @@ function loop(timestamp){
       }else if (softdrop && elp-softdroptime>sdr){
             if (checkpos([[current[0][0],current[0][1]+1],current[1],current[2]])){
                //move down
-            sounds["move"].play()
+            playsound("move")
                current[0][1]+=1
                   isfloor=false
 
@@ -799,7 +813,7 @@ function loop(timestamp){
       timedirpress+=arr
          let temp=[[current[0][0]+keyheld,current[0][1]],current[1],current[2]]
          if (checkpos(temp)){
-            sounds["move"].play()
+            playsound("move")
             current=temp
                timetouchedfloor=elp
          }  else{ 
