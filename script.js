@@ -1,3 +1,5 @@
+const AudioContext = window.AudioContext || window.webkitAudioContext;
+const audioCtx = new AudioContext();
 const siz=[10,20] // Width, Height
 const lockdelay=500
 const das=120
@@ -7,6 +9,26 @@ const magnitude=(Math.min(...screensize)/(Math.max(...siz)*1.5))
    const droprate=500
    const sdr=50
    let setkey=""
+const sounds={
+   "combo":[
+   new Audio("combo_1.wav"),
+   new Audio("combo_2.wav"),
+   new Audio("combo_3.wav"),
+   new Audio("combo_4.wav"),
+   new Audio("combo_5.wav"),
+   new Audio("combo_6.wav"),
+   new Audio("combo_7.wav"),
+   new Audio("combo_8.wav")
+   ],
+   "combobreak":new Audio("combobreak.wav"),
+   "hd":new Audio("harddrop.wav"),
+   "move":new Audio("move.wav"),
+   "rotate":new Audio("rotate.wav"),
+   "hold":new Audio("hold.wav")
+
+   
+
+}
 const newrow=new Array(siz[0]).fill(0)
    const holdamount=5
    let keybinds={
@@ -135,6 +157,7 @@ function keydown(e){
                break;
          case keybinds["hold"]:
             if (canhold){
+               sounds["hold"].play()
                canhold=false
                   if (hold<0){
                      hold =current[1]
@@ -158,6 +181,7 @@ function keydown(e){
                resetblock()
                checklineclear()
                canhold=true
+               sounds["hd"].play()
                break
       }
 }
@@ -474,8 +498,8 @@ function setpad(){
    padding["top"].style.height=`${paddingsize}px`
    padding["bottom"].style.height=`${paddingsize}px`
 
-   padding["right"].style.width=`${paddingsize}px`
-   padding["left"].style.width=`${paddingsize}px`
+   padding["right"].style.width=`${paddingsize*2}px`
+   padding["left"].style.width=`${paddingsize*2}px`
 }
 let padding={
 }
@@ -484,8 +508,8 @@ function setposition(pos){
    let size=paddingsize
    padding["top"].style.height=`${size-pos[1]}px`
    padding["bottom"].style.height=`${size+pos[1]}px`
-   padding["right"].style.width=`${size+pos[0]}px`
-   padding["right"].style.width=`${size-pos[0]}px`
+   padding["left"].style.width=`${(size+pos[0])*2}px`
+   padding["right"].style.width=`${(size-pos[0])*2}px`
 }
 function hd(){
    let temp=current
@@ -507,6 +531,7 @@ function move(dir){
    timedirpress=elp
       let temp=[[current[0][0]+keyheld,current[0][1]],current[1],current[2]]
       if (checkpos(temp)){
+               sounds["move"].play()
          current=temp
             timetouchedfloor=elp
       }else{
@@ -545,6 +570,8 @@ function rotate(cur,dir){
       for (let i=0;i<kickl.length;i++){
          let tempcur=[[cur[0][0]+kickl[i][0],cur[0][1]-kickl[i][1]],cur[1],(4+cur[2]+dir)%4]
             if (checkpos(tempcur)){
+
+               sounds["rotate"].play()
                return [true,tempcur]
             }
       }
@@ -657,11 +684,13 @@ for (let n=0;n<vnext.length;n++){
    }
 }
 }
+let combocount=0
 function checklineclear(){
    let i=0
-
+   let linecleared=0
       while (i<board.length){
          if (!board[i].includes(0)){
+            linecleared+=1
             board.splice(i,1)
                board.unshift(JSON.parse(JSON.stringify(newrow)))
                score += 10 + (multiplier * 5)
@@ -673,7 +702,22 @@ function checklineclear(){
          i++
       }
       elementNum += 1
-      
+      if (linecleared>0){
+         combocount+=1
+         if (combocount<9){
+            sounds["combo"][combocount-1].play()
+         }else{
+            sounds["combo"][7].play()
+         }
+      }else{
+         if (combocount>0){
+            sounds["combobreak"].play()
+         }            
+
+         combocound=0
+         
+         
+      }
       if (board[4].reduce((a, b) => a + b, 0)!=0) {
          load()
             console.log("DIE")
@@ -736,6 +780,7 @@ function loop(timestamp){
       }else if (softdrop && elp-softdroptime>sdr){
             if (checkpos([[current[0][0],current[0][1]+1],current[1],current[2]])){
                //move down
+            sounds["move"].play()
                current[0][1]+=1
                   isfloor=false
 
@@ -754,6 +799,7 @@ function loop(timestamp){
       timedirpress+=arr
          let temp=[[current[0][0]+keyheld,current[0][1]],current[1],current[2]]
          if (checkpos(temp)){
+            sounds["move"].play()
             current=temp
                timetouchedfloor=elp
          }  else{ 
