@@ -11,36 +11,41 @@ const magnitude=(Math.min(...screensize)/(Math.max(...siz)*1.5))
    let setkey=""
 const sounds={
    "combo":[
-   "combo_1.wav",
-   "combo_2.wav",
-   "combo_3.wav",
-   "combo_4.wav",
-   "combo_5.wav",
-   "combo_6.wav",
-   "combo_7.wav",
-   "combo_8.wav"
+   new Howl({src: ["combo_1.wav"]}),
+   new Howl({src: ["combo_2.wav"]}),
+   new Howl({src: ["combo_3.wav"]}),
+   new Howl({src: ["combo_4.wav"]}),
+   new Howl({src: ["combo_5.wav"]}),
+   new Howl({src: ["combo_6.wav"]}),
+   new Howl({src: ["combo_7.wav"]}),
+   new Howl({src: ["combo_8.wav"]})
    ],
-   "combobreak":  "combobreak.wav",
-   "hd":          "harddrop.wav",
-   "move":        "move.wav",
-   "rotate":      "rotate.wav",
-   "hold":        "hold.wav"
+   "combobreak": new Howl({src: ["combobreak.wav"]}),
+   "hd":         new Howl({src: ["harddrop.wav"]}),
+   "move":       new Howl({src: ["move.wav"]}),
+   "rotate":     new Howl({src: ["rotate.wav"]}),
+   "hold":       new Howl({src: ["hold.wav"]})
 
    
 
 }
 function playsound(name,item=-1){
      
-   audio = document.createElement("audio");
-   if (item>=0){
+  // let audio = document.createElement("audio");
+  // if (item>=0){
 
-   audio.src=`./${sounds[name][item]}`
-   }else{
-   audio.src=`./${sounds[name]}`}
-   audio.addEventListener("ended", function () {
-               document.removeChild(this);
-                       }, false);
-   audio.play()
+  // audio.src=`./${sounds[name][item]}`
+  // }else{
+  // audio.src=`./${sounds[name]}`}
+  // audio.addEventListener("ended", function () {
+  //             document.removeChild(this);
+  //                     }, false);
+  // audio.play()
+  if (item>=0){
+  sounds[name][item].play()
+  }else{
+  sounds[name].play()
+  }
 }
 
 const newrow=new Array(siz[0]).fill(0)
