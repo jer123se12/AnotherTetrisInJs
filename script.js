@@ -14,14 +14,43 @@ let setkey=""
 let velocity=[0,0]
 const sounds={
    "combo":[
-   new Howl({src: ["src/Audio/combo_1.wav"]}),
-   new Howl({src: ["src/Audio/combo_2.wav"]}),
-   new Howl({src: ["src/Audio/combo_3.wav"]}),
-   new Howl({src: ["src/Audio/combo_4.wav"]}),
-   new Howl({src: ["src/Audio/combo_5.wav"]}),
-   new Howl({src: ["src/Audio/combo_6.wav"]}),
-   new Howl({src: ["src/Audio/combo_7.wav"]}),
-   new Howl({src: ["src/Audio/combo_8.wav"]})
+   [
+   new Howl({src: ["src/Audio/combo1_1.wav"]}),
+   new Howl({src: ["src/Audio/combo1_2.wav"]}),
+   new Howl({src: ["src/Audio/combo1_3.wav"]}),
+   new Howl({src: ["src/Audio/combo1_4.wav"]}),
+   new Howl({src: ["src/Audio/combo1_5.wav"]}),
+   new Howl({src: ["src/Audio/combo1_6.wav"]}),
+   new Howl({src: ["src/Audio/combo1_7.wav"]})
+   ],
+[
+   new Howl({src: ["src/Audio/combo2_1.wav"]}),
+   new Howl({src: ["src/Audio/combo2_2.wav"]}),
+   new Howl({src: ["src/Audio/combo2_3.wav"]}),
+   new Howl({src: ["src/Audio/combo2_4.wav"]}),
+   new Howl({src: ["src/Audio/combo2_5.wav"]}),
+   new Howl({src: ["src/Audio/combo2_6.wav"]}),
+   new Howl({src: ["src/Audio/combo2_7.wav"]})
+   ],
+[
+   new Howl({src: ["src/Audio/combo3_1.wav"]}),
+   new Howl({src: ["src/Audio/combo3_2.wav"]}),
+   new Howl({src: ["src/Audio/combo3_3.wav"]}),
+   new Howl({src: ["src/Audio/combo3_4.wav"]}),
+   new Howl({src: ["src/Audio/combo3_5.wav"]}),
+   new Howl({src: ["src/Audio/combo3_6.wav"]}),
+   new Howl({src: ["src/Audio/combo3_7.wav"]})
+   ],
+[
+   new Howl({src: ["src/Audio/combo4_1.wav"]}),
+   new Howl({src: ["src/Audio/combo4_2.wav"]}),
+   new Howl({src: ["src/Audio/combo4_3.wav"]}),
+   new Howl({src: ["src/Audio/combo4_4.wav"]}),
+   new Howl({src: ["src/Audio/combo4_5.wav"]}),
+   new Howl({src: ["src/Audio/combo4_6.wav"]}),
+   new Howl({src: ["src/Audio/combo4_7.wav"]})
+   ]
+
    ],
    "combobreak": new Howl({src: ["src/Audio/combobreak.wav"]}),
    "hd":         new Howl({src: ["src/Audio/harddrop.wav"]}),
@@ -32,9 +61,9 @@ const sounds={
    
 
 }
-function playsound(name,item=-1){
+function playsound(name,item=-1,item2=-1){
   if (item>=0){
-  sounds[name][item].play()
+  sounds[name][item][item2].play()
   }else{
   sounds[name].play()
   }
@@ -585,6 +614,7 @@ function checkpos(cur){
 function rotate(cur,dir){
    let kickl=[]
       if (cur[1]==6){
+               playsound("rotate")
          return [true,cur]
       }else if (cur[1]==0){
          kickl=wallkick[0][dir][cur[2]]
@@ -733,13 +763,13 @@ function checklineclear(){
       lineClearSum+=linecleared
       if (linecleared>0){
          combocount+=1
-         if (combocount<9){
-            playsound("combo",combocount-1)
+         if (combocount<8){
+            playsound("combo",linecleared-1,combocount-1)
          }else{
-            playsound("combo",7)
+            playsound("combo",linecleared-1,6)
          }
       }else{
-         if (combocount>0){
+         if (combocount>3){
             playsound("combobreak")
          }            
 
