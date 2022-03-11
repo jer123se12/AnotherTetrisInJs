@@ -59,7 +59,6 @@ let start
 let bag=[0,1,2,3,4,5,6]
 let vnext=[]
 let position=[0,0]
-let velocity=[0,0]
 bag=shuffleArray([0,1,2,3,4,5,6])
    bag=[...bag,...shuffleArray([0,1,2,3,4,5,6])]
    let keyheld=0
@@ -151,7 +150,7 @@ function keydown(e){
             }
             break;
          case keybinds["l"]:
-            rotstuff("l")
+           rotstuff("l")
                break;
          case keybinds["right"]:
             if (keyheld<=0){
@@ -707,6 +706,7 @@ for (let n=0;n<vnext.length;n++){
 }
 }
 let combocount=0
+let lineClearSum=0
 function checklineclear(){
    let i=0
    let linecleared=0
@@ -715,7 +715,7 @@ function checklineclear(){
             linecleared+=1
             board.splice(i,1)
                board.unshift(JSON.parse(JSON.stringify(newrow)))
-               score += 10 + (multiplier * 5)
+               score += 10 + (combocount * 5)
                if (multiplier == maxMul) {
                   multiplier += 1
                }
@@ -724,6 +724,7 @@ function checklineclear(){
          i++
       }
       elementNum += 1
+      lineClearSum+=linecleared
       if (linecleared>0){
          combocount+=1
          if (combocount<9){
@@ -839,9 +840,16 @@ function loop(timestamp){
    prev=elp + 0
 setposition(position)
    
+      updateDataLabels()
       rend(current)
       window.requestAnimationFrame(loop)
 }
+function updateDataLabels(){
+   document.getElementById("Combo").innerHTML=combocount
+   console.log(lineClearSum)
+   document.getElementById("linesCleared").innerHTML=lineClearSum
+}
+
 document.addEventListener("visibilitychange", (event) => {
    if (document.visibilityState == "visible" ) {
      tgplay()
