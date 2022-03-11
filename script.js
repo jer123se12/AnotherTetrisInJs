@@ -788,6 +788,7 @@ function loop(timestamp){
    if (Math.abs(position[1])<0.01){position[1]=0}
    
    }
+setposition(position)
    
       if (!softdrop && elp-nextmovetime>=droprate){
          //drop the block one
@@ -842,7 +843,6 @@ function loop(timestamp){
       console.log("wierd time diff")
    }
    prev=elp + 0
-setposition(position)
    
       updateDataLabels()
       rend(current)
