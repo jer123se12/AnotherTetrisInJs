@@ -8,7 +8,7 @@
         <script src="script.js"></script>
         <link rel="stylesheet" href="styles.css">
     </head>
-    <body onload="load()" class="mainFrame">
+    <body onload="load();settingsOnStartup()" class="mainFrame">
         <!--
         <div class="headerText" style="padding-bottom: 1%;">
             <h1>Tetris in JavaScript</h1>
@@ -21,18 +21,32 @@
         -->
         <script>
 
-            let settings=false
+            let settings=true
             function toggle(){
                settings=!settings
                console.log(settings)
                if (settings === false){
+                  tgplay()
                    document.getElementById("overlay").style.display = "flex";
                }
                else{
+                  loadSettings()
+                  tgplay()
                    document.getElementById("overlay").style.display="none"
                }
             }
+            function settingsOnStartup(){
+            document.getElementById("DASval").innerHTML=`${getCookie("das")}ms`
+            console.log(getCookie("das"))
+            document.getElementById("dasrange").value=getCookie("das")
+            document.getElementById("ARRval").innerHTML=`${getCookie("arr")}ms`
+            console.log(getCookie("arr"))
+            document.getElementById("arrrange").value=getCookie("arr")
+            document.getElementById("SDRval").innerHTML=`${getCookie("sdr")}ms`
 
+            console.log(getCookie("arr"))
+            document.getElementById("sdrrange").value=getCookie("sdr")
+            }
         </script>
         <img id="settings-toggle" onclick="toggle();" src="src/img/GearIcon.png" style="height:50px;width:50px; z-index:10000;position: absolute; top:10px;left: 10px;width: fit-content;height:fit-content;background:transparent;"/>
         <div id="overlay">
@@ -54,6 +68,21 @@
                     <div class="rebind" id="ctrll" onclick="setkey='l';document.getElementById(`ctrl${setkey}`).innerHTML='';"></div>
                     <h2 class="griditem">Hold</h2>
                     <div class="rebind" id="ctrlhold" onclick="setkey='hold';document.getElementById(`ctrl${setkey}`).innerHTML='';"></div>
+                    <h2 class="griditem">Delayed Auto Shift</h2>
+                    <div id="slider and value container" class="row"style="width:20rem;align-items:center;">
+                     <input type="range" min="20" max="500" value="parseInt(getCookie(`das`))" class="slider" id="dasrange"   oninput= "document.getElementById(`DASval`).innerHTML=`${this.value}ms`; setCookie(`das`,this.value,1000)" >
+                     <h3 id="DASval"></h3>
+                    </div>
+                    <h2 class="griditem">Auto Repeat Rate</h2>
+                    <div id="slider and value container" class="row"style="width:20rem;align-items:center;">
+                     <input type="range" min="1" max="100" value="parseInt(getCookie(`arr`))" class="slider" id="arrrange"   oninput= "document.getElementById(`ARRval`).innerHTML=`${this.value}ms`; setCookie(`arr`,this.value,1000)" >
+                     <h3 id="ARRval"></h3>
+                    </div>
+                    <h2 class="griditem">Soft Drop Rate</h2>
+                    <div id="slider and value container" class="row"style="width:20rem;align-items:center;">
+                     <input type="range" min="1" max="100" value="parseInt(getCookie(`sdr`))" class="slider" id="sdrrange"   oninput= "document.getElementById(`SDRval`).innerHTML=`${this.value}ms`; setCookie(`sdr`,this.value,1000)" >
+                     <h3 id="SDRval"></h3>
+                    </div>
                 </div>
                 
             </div>

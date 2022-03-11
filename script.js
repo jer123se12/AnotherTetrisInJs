@@ -2,13 +2,13 @@ const AudioContext = window.AudioContext || window.webkitAudioContext;
 const audioCtx = new AudioContext();
 const siz=[10,20] // Width, Height
 const lockdelay=500
-const das=120
-const arr=20
-   const screensize = [window.innerHeight,window.innerWidth]
+let das=120
+let arr=20
+let sdr=50
+const screensize = [window.innerHeight,window.innerWidth]
 const magnitude=(Math.min(...screensize)/(Math.max(...siz)*1.5))
-   const droprate=500
-   const sdr=50
-   let setkey=""
+const droprate=500
+let setkey=""
 const sounds={
    "combo":[
    new Howl({src: ["src/Audio/combo_1.wav"]}),
@@ -56,7 +56,7 @@ let board=[]
 let hold=-1
 let canhold=true
 let start
-   let bag=[0,1,2,3,4,5,6]
+let bag=[0,1,2,3,4,5,6]
 let vnext=[]
 let position=[0,0]
 let velocity=[0,0]
@@ -450,13 +450,27 @@ function loadKeybinds(){
    console.log(keybinds)
 
 }
+function setDefaultSettings(){
+   setCookie("das",das,1000)
+   setCookie("sdr",sdr,1000)
+   setCookie("arr",arr,1000)
+}
+function loadSettings(){
+   das=parseInt(getCookie("das"))
+   sdr=parseInt(getCookie("sdr"))
+   arr=parseInt(getCookie("arr"))
+   console.log(das,sdr,arr)
+
+}
 let play=false
 function load(){
    if (getCookie("hold")==""){
       setDefaultKeybinds()
+      setDefaultSettings()
       console.log(keybinds)
    }
    loadKeybinds()
+   loadSettings()
       console.log(keybinds)
    
    gridhtml=(size,x,y)=>`<div class="grid " id="${x} ${y}" style="width: ${size}px; height: ${size}px"></div>`
