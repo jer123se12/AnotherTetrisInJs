@@ -10,6 +10,8 @@ const screensize = [window.innerHeight,window.innerWidth]
 const magnitude=(Math.min(...screensize)/(Math.max(...siz)*1.5))
 const droprate=500
 let setkey=""
+//swap position and velocity
+let velocity=[0,0]
 const sounds={
    "combo":[
    new Howl({src: ["src/Audio/combo_1.wav"]}),
@@ -183,7 +185,7 @@ function keydown(e){
             break;   
          case keybinds["hd"]:
             let temp=hd()
-            position[1]-=(temp[0][1]-current[0][1])*2
+            position[1]-=(temp[0][1]-current[0][1])*(4*shake)
             current=temp
                putblock(current)
                resetblock()
@@ -560,7 +562,7 @@ function move(dir){
          current=temp
             timetouchedfloor=elp
       }else{
-         position[0]+=keyheld*5
+         position[0]+=keyheld*(8*shake)
       }
 
 }
@@ -783,12 +785,14 @@ function loop(timestamp){
    actualelp=timestamp-start
    if (play){
    elp=timestamp-start;
-   position=[(position[0]*shake),(position[1]*shake)];
-   if (Math.abs(position[0])<0.01){position[0]=0}
-   if (Math.abs(position[1])<0.01){position[1]=0}
-   
+   position=[((position[0]-velocity[0])*0.5),(position[1]-velocity[1])*0.5];
+   if (Math.abs(position[0])<0.5){position[0]=0}
+   if (Math.abs(position[1])<0.5){position[1]=0}
+   if (Math.abs(velocity[0])<0.1){velocity[0]=0}
+   if (Math.abs(velocity[0])<0.1){velocity[0]=0}
+   velocity=[velocity[0]+position[0],velocity[1]+position[1]]
    }
-setposition(position)
+setposition(velocity)
    
       if (!softdrop && elp-nextmovetime>=droprate){
          //drop the block one
@@ -831,7 +835,7 @@ setposition(position)
             current=temp
                timetouchedfloor=elp
          }  else{ 
-         position[0]+=keyheld*5}
+         position[0]+=keyheld*(10*shake)}
    }
    if (isfloor && elp-timetouchedfloor>lockdelay){
       putblock(current)
