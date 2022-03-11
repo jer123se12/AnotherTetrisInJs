@@ -777,20 +777,27 @@ function tgplay(){
    return play
 }
 let actualelp=0
+function displayFPS(dt){
+   document.getElementById("FPS").innerHTML=(1/dt).toFixed(2)
+}
 function loop(timestamp){
    if (start==undefined){
       start=timestamp 
          nextmovetime=droprate
    }
+   
    actualelp=timestamp-start
    if (play){
    elp=timestamp-start;
-   position=[((position[0]-velocity[0])*0.5),(position[1]-velocity[1])*0.5];
-   if (Math.abs(position[0])<0.5){position[0]=0}
-   if (Math.abs(position[1])<0.5){position[1]=0}
-   if (Math.abs(velocity[0])<0.1){velocity[0]=0}
-   if (Math.abs(velocity[0])<0.1){velocity[0]=0}
-   velocity=[velocity[0]+position[0],velocity[1]+position[1]]
+   let deltatime=(elp-prev)/100
+   position=[(position[0]*0.9),(position[1]*0.9)];
+   position=[(position[0]-(velocity[0]*0.1)),position[1]-(velocity[1]*0.1)];
+   if (Math.abs(position[0])<0.01){position[0]=0}
+   if (Math.abs(position[1])<0.01){position[1]=0}
+   if (Math.abs(velocity[0])<0.01){velocity[0]=0}
+   if (Math.abs(velocity[0])<0.01){velocity[0]=0}
+   velocity=[velocity[0]+position[0]*deltatime,velocity[1]+position[1]*deltatime]
+   displayFPS(deltatime/10)
    }
 setposition(velocity)
    
