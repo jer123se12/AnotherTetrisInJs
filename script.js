@@ -11,36 +11,25 @@ const magnitude=(Math.min(...screensize)/(Math.max(...siz)*1.5))
    let setkey=""
 const sounds={
    "combo":[
-   new Howl({src: ["combo_1.wav"]}),
-   new Howl({src: ["combo_2.wav"]}),
-   new Howl({src: ["combo_3.wav"]}),
-   new Howl({src: ["combo_4.wav"]}),
-   new Howl({src: ["combo_5.wav"]}),
-   new Howl({src: ["combo_6.wav"]}),
-   new Howl({src: ["combo_7.wav"]}),
-   new Howl({src: ["combo_8.wav"]})
+   new Howl({src: ["src/Audio/combo_1.wav"]}),
+   new Howl({src: ["src/Audio/combo_2.wav"]}),
+   new Howl({src: ["src/Audio/combo_3.wav"]}),
+   new Howl({src: ["src/Audio/combo_4.wav"]}),
+   new Howl({src: ["src/Audio/combo_5.wav"]}),
+   new Howl({src: ["src/Audio/combo_6.wav"]}),
+   new Howl({src: ["src/Audio/combo_7.wav"]}),
+   new Howl({src: ["src/Audio/combo_8.wav"]})
    ],
-   "combobreak": new Howl({src: ["combobreak.wav"]}),
-   "hd":         new Howl({src: ["harddrop.wav"]}),
-   "move":       new Howl({src: ["move.wav"]}),
-   "rotate":     new Howl({src: ["rotate.wav"]}),
-   "hold":       new Howl({src: ["hold.wav"]})
+   "combobreak": new Howl({src: ["src/Audio/combobreak.wav"]}),
+   "hd":         new Howl({src: ["src/Audio/harddrop.wav"]}),
+   "move":       new Howl({src: ["src/Audio/move.wav"]}),
+   "rotate":     new Howl({src: ["src/Audio/rotate.wav"]}),
+   "hold":       new Howl({src: ["src/Audio/hold.wav"]})
 
    
 
 }
 function playsound(name,item=-1){
-     
-  // let audio = document.createElement("audio");
-  // if (item>=0){
-
-  // audio.src=`./${sounds[name][item]}`
-  // }else{
-  // audio.src=`./${sounds[name]}`}
-  // audio.addEventListener("ended", function () {
-  //             document.removeChild(this);
-  //                     }, false);
-  // audio.play()
   if (item>=0){
   sounds[name][item].play()
   }else{

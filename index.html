@@ -23,20 +23,18 @@
 
             let settings=false
             function toggle(){
-                
                settings=!settings
-               if (!tgplay()){
-                  document.getElementById("overlay").style.display = "flex";
-
-               }else{
-                  document.getElementById("overlay").style.display = "none";
+               console.log(settings)
+               if (settings === false){
+                   document.getElementById("overlay").style.display = "flex";
+               }
+               else{
+                   document.getElementById("overlay").style.display="none"
                }
             }
 
         </script>
-        <div id="settings-toggle" onclick="toggle();" style="z-index:10000;position: absolute; top:10px;left: 10px;width: fit-content;height:fit-content;background:transparent;">
-        <img src="https://www.iconsdb.com/icons/preview/white/gear-2-xxl.png" style="height:50px;width:50px;"/>
-        </div>
+        <img id="settings-toggle" onclick="toggle();" src="src/img/GearIcon.png" style="height:50px;width:50px; z-index:10000;position: absolute; top:10px;left: 10px;width: fit-content;height:fit-content;background:transparent;"/>
         <div id="overlay">
             <div class="row">
                 <div style="display: grid;grid-template-columns: repeat(2, 1fr);column-gap: 50px;row-gap: 0px;">
