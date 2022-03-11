@@ -5,6 +5,7 @@ const lockdelay=500
 let das=120
 let arr=20
 let sdr=50
+let shake=0.95
 const screensize = [window.innerHeight,window.innerWidth]
 const magnitude=(Math.min(...screensize)/(Math.max(...siz)*1.5))
 const droprate=500
@@ -453,12 +454,14 @@ function setDefaultSettings(){
    setCookie("das",das,1000)
    setCookie("sdr",sdr,1000)
    setCookie("arr",arr,1000)
+   setCookie("shake",0.95,1000)
 }
 function loadSettings(){
    das=parseInt(getCookie("das"))
    sdr=parseInt(getCookie("sdr"))
    arr=parseInt(getCookie("arr"))
-   console.log(das,sdr,arr)
+   shake=parseFloat(getCookie("shake"))
+   console.log(das,sdr,arr,shake)
 
 }
 let play=false
@@ -467,6 +470,7 @@ function load(){
       setDefaultKeybinds()
       setDefaultSettings()
       console.log(keybinds)
+      settingsOnStartup()
    }
    loadKeybinds()
    loadSettings()
@@ -779,7 +783,7 @@ function loop(timestamp){
    actualelp=timestamp-start
    if (play){
    elp=timestamp-start;
-   position=[(position[0]*0.95),(position[1]*0.95)];
+   position=[(position[0]*shake),(position[1]*shake)];
    if (Math.abs(position[0])<0.01){position[0]=0}
    if (Math.abs(position[1])<0.01){position[1]=0}
    
