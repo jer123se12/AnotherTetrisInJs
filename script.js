@@ -55,6 +55,7 @@ const sounds={
    "combobreak": new Howl({src: ["src/Audio/combobreak.wav"]}),
    "hd":         new Howl({src: ["src/Audio/harddrop.wav"]}),
    "move":       new Howl({src: ["src/Audio/move.wav"]}),
+   "move2":       new Howl({src: ["src/Audio/move2.wav"],volume: 0.25}),
    "rotate":     new Howl({src: ["src/Audio/rotate.wav"]}),
    "hold":       new Howl({src: ["src/Audio/hold.wav"]})
 
@@ -439,7 +440,25 @@ function loadhold(){
 
 
 }
+function resetGame(){
+   hold=-1
+   bag=shuffleArray([0,1,2,3,4,5,6])
+   bag=[...bag,...shuffleArray([0,1,2,3,4,5,6])]
+   for (let y=0;y<board.length;y++){
+      for (let x=0;x<board[0].length;x++){
+         board[y][x]=0
+      }
+   }
+   lineClearSum=0
+   combocount=0
+   current=[[3,2],getnext(),0]
+   rendnext()
+   rendhold()
+   score=0
+   updateDataLabels()
+   
 
+}
 function loadnext(){
    let gridhtml=(size,x,y,n)=>`<div class="empty" id="n${n} ${x} ${y}" style="width: ${size}px; height: ${size}px"></div>`
    let outer=document.getElementById("next")
@@ -466,6 +485,7 @@ function loadnext(){
       }
    }
 }
+
 function setDefaultKeybinds(){
    for(let key of Object.keys(keybinds)){
       setCookie(key,keybinds[key],1000)
@@ -538,6 +558,7 @@ function load(){
       play=true
       
       setpad()
+      updateDataLabels()
       
       window.requestAnimationFrame(loop)
 
@@ -696,6 +717,11 @@ function rend(cur){
 }
 function rendhold(){
    if (hold==-1){
+      for (let i=0;i<vhold.length;i++){
+         for (let j=0;j<vhold[0].length;j++){
+            vhold[i][j].className='empty'
+         }
+      }
       return 
    }
    shape=blocks[hold][0]
@@ -755,7 +781,6 @@ function checklineclear(){
                if (multiplier == maxMul) {
                   multiplier += 1
                }
-            document.getElementById("score").innerHTML = `Score: ${score}`
          }
          i++
       }
@@ -778,9 +803,10 @@ function checklineclear(){
          
       }
       if (board[4].reduce((a, b) => a + b, 0)!=0) {
-         load()
+         resetGame()
             console.log("DIE")
       }
+      updateDataLabels()
 }
 function rotstuff(dir){
    let temp=rotate(current,dir)
@@ -836,6 +862,7 @@ setposition(velocity)
 
             if (checkpos([[current[0][0],current[0][1]+1],current[1],current[2]])){
                //move down
+            playsound("move2")
                current[0][1]+=1
                   isfloor=false
 
@@ -885,7 +912,6 @@ setposition(velocity)
    }
    prev=elp + 0
    
-      updateDataLabels()
       rend(current)
       window.requestAnimationFrame(loop)
 }
@@ -893,6 +919,7 @@ function updateDataLabels(){
    document.getElementById("Combo").innerHTML=combocount
    console.log(lineClearSum)
    document.getElementById("linesCleared").innerHTML=lineClearSum
+   document.getElementById("score").innerHTML = `Score: ${score}`
 }
 
 document.addEventListener("visibilitychange", (event) => {
