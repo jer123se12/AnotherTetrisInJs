@@ -1,6 +1,6 @@
 .grid{
     opacity: 0.3;
-    border: 1px solid #aaa;
+    border: 1px inset #aaa;
     background: #000;
 }
 .row{
@@ -96,7 +96,9 @@
 
 }
 .empty{
-   border: 1px solid rgba(255,255,255,0);
+   border-color:rgba(255,255,255,0);
+   background:rgba(255,255,255,0);
+
 }
 #next{
    margin-left: 20px;
@@ -104,6 +106,7 @@
    border: 5px solid #fff;
    margin-top: 0px;
    height: fit-content;
+   width:fit-content;
 }
 body{
     font-family: 'Ubuntu', sans-serif;
@@ -119,47 +122,55 @@ body{
    margin-top: 0px;
     border: 5px solid #fff;
     height: fit-content;
+    width: fit-content;
+    align-self:center;
+}
+.b0{
+    opacity: 1;
+    background: #555;
+    border-color:#555;
+    
 }
 .b1{
     opacity: 1;
     background: #00ffff;
-    border:1px solid #00ffff;
+    border-color: #00ffff;
     
 }
 .b2{
     opacity: 1;
     background: #800080;
-    border:1px solid #800080;
+    border-color: #800080;
 }
 .b3{
     opacity: 1;
     background: #ff0000;
-    border:1px solid #ff0000;
+    border-color: #ff0000;
 }
 .b4{
     opacity: 1;
     background: #00ff00;
-    border:1px solid #00ff00;
+    border-color: #00ff00;
 }
 .b5{
     opacity: 1;
     background: #0000ff;
-    border:1px solid #0000ff;
+    border-color: #0000ff;
 }
 .b6{
     opacity: 1;
     background: #ff7f00;
-    border:1px solid #ff7f00;
+    border-color: #ff7f00;
 }
 .b7{
     opacity: 1;
     background: #ffff00;
-    border:1px solid #ffff00;
+    border-color: #ffff00;
 }
 .ho{
     opacity: 0.7;
     background: #ccc;
-    border:1px solid #ccc;
+    border-color: #ccc;
 }
 .mainFrame {
     display: flex;

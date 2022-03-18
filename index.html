@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
+    <title>Tetris!!!</title>
         <link rel="preconnect" href="https://fonts.googleapis.com"> 
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
 <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap" rel="stylesheet">
@@ -55,7 +56,7 @@
         <img id="settings-toggle" onclick="toggle();" src="src/img/GearIcon.png" style="height:50px;width:50px; z-index:10000;position: absolute; top:10px;left: 10px;width: fit-content;height:fit-content;background:transparent;"/>
         <div id="overlay">
             <div class="row">
-                <div style="display: grid;grid-template-columns: repeat(2, 1fr);column-gap: 50px;row-gap: 0px;">
+                <div style="display: grid;grid-template-columns: repeat(2, 1fr);column-gap: 50px;row-gap: 0px;overflow: scroll;">
                     <h1 class="griditem">Settings</h1>
                     <div></div>
                     <h2 class="griditem">Left</h2>
@@ -96,14 +97,14 @@
                 
             </div>
         </div>
-        <div style="margin-left: auto; margin-right: auto;">
+        <div style="position:absolute;left:0px;top:0px;height:100vh;width:100vw; display: flex;display: flex;justify-content: center;align-items: center;flex-direction:column">
             <div id="motionTop"></div>
             <div class="row">
 
             <div id="motionLeft"></div>
             <div>
             <div id="hold" style="padding: 10px;"></div>
-            <div id="gameData">
+            <div id="gameData" style="padding:10px;">
                <h3 id="score">Score: 0</h3>
                <h3>Lines Cleared:<br><span id="linesCleared"></span></h3>
                <h3>Combo: <br><span id="Combo"></span></h3>

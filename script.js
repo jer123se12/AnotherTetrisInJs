@@ -7,7 +7,7 @@ let arr=20
 let sdr=50
 let shake=0.95
 const screensize = [window.innerHeight,window.innerWidth]
-const magnitude=(Math.min(...screensize)/(Math.max(...siz)*1.5))
+const magnitude=(screensize[0]/(siz[1]*2))
 const droprate=500
 let setkey=""
 //swap position and velocity
@@ -457,6 +457,8 @@ function resetGame(){
    score=0
    updateDataLabels()
    
+   endgame=false
+   play=true
 
 }
 function loadnext(){
@@ -480,7 +482,7 @@ function loadnext(){
       for (let y=0;y<4;y++){
          vnext[n].push([])
          for (let x=0;x<4;x++){
-               vnext[n][y].push(document.getElementById(`n${n} ${x} ${y}`))
+               vnext[n][y].push(document.getElementById(`n${n.toString().charAt(0)} ${x} ${y}`))
          }
       }
    }
@@ -680,8 +682,12 @@ function rend(cur){
          if (board[i][j]==0){
             vboard[i-5][j].className="grid"
          }else{
-            vboard[i-5][j].className=`grid b${board[i][j]}`//style.background=blockColor[board[i][j]]
+            if (!endgame){
+                     vboard[i-5][j].className=`grid b${board[i][j]}`
+                     }else{
+                     vboard[i-5][j].className=`grid b${0}`
 
+                     }
          }
       }
    }
@@ -698,18 +704,24 @@ function rend(cur){
             }
          }
       }
+      if (!endgame){
    shape=blocks[cur[1]][cur[2]]
       for (let i=0;i<shape.length;i++){
          for (let j=0;j<shape[i].length;j++){
             if (shape[i][j]!=0){
                let posib=[cur[0][0]+j,cur[0][1]+i-5]
                   if (posib[1]>=0){
-                     vboard[posib[1]][posib[0]].className=`grid b${shape[i][j]}`
+                     if (!endgame){
+                     vboard[posib[1]][posib[0]].className=`grid b${shape[i][j].toString().charAt(0)}`
+                     }else{
+                     vboard[posib[1]][posib[0]].className=`grid b${0}`
+
+                     }
 
                   }
             }
          }
-      }
+      }}
    rendhold()
       rendnext()
 
@@ -719,7 +731,7 @@ function rendhold(){
    if (hold==-1){
       for (let i=0;i<vhold.length;i++){
          for (let j=0;j<vhold[0].length;j++){
-            vhold[i][j].className='empty'
+            vhold[i][j].className='grid empty'
          }
       }
       return 
@@ -727,7 +739,7 @@ function rendhold(){
    shape=blocks[hold][0]
       for (let i=0;i<vhold.length;i++){
          for (let j=0;j<vhold[0].length;j++){
-            vhold[i][j].className='empty'
+            vhold[i][j].className='grid empty'
          }
       }
    for (let i=0;i<shape.length;i++){
@@ -749,7 +761,7 @@ function rendnext(){
 for (let n=0;n<vnext.length;n++){
    for (let i=0;i<vnext[0].length;i++){
          for (let j=0;j<vnext[0][0].length;j++){
-            vnext[n][i][j].className='empty'
+            vnext[n][i][j].className='grid empty'
       }
    }
    }
@@ -769,6 +781,7 @@ for (let n=0;n<vnext.length;n++){
 }
 let combocount=0
 let lineClearSum=0
+let endgame=false
 function checklineclear(){
    let i=0
    let linecleared=0
@@ -803,7 +816,11 @@ function checklineclear(){
          
       }
       if (board[4].reduce((a, b) => a + b, 0)!=0) {
-         resetGame()
+         
+         play=false
+         endgame=true
+
+
             console.log("DIE")
       }
       updateDataLabels()
@@ -859,6 +876,7 @@ setposition(velocity)
    
       if (!softdrop && elp-nextmovetime>=droprate){
          //drop the block one
+         while((!softdrop && elp-nextmovetime>=droprate)){
 
             if (checkpos([[current[0][0],current[0][1]+1],current[1],current[2]])){
                //move down
@@ -870,10 +888,12 @@ setposition(velocity)
                if (!isfloor){
                   isfloor=true
                      timetouchedfloor=elp+0
+                     break
                }
             }
          nextmovetime+=droprate
-      }else if (softdrop && elp-softdroptime>sdr){
+         }
+      }else{ while (softdrop && elp-softdroptime>sdr){
             if (checkpos([[current[0][0],current[0][1]+1],current[1],current[2]])){
                //move down
             playsound("move")
@@ -884,14 +904,16 @@ setposition(velocity)
                if (!isfloor){
                   isfloor=true
                      timetouchedfloor=elp+0
+                     break
                }else{
                   position[1]-=3
                }
             }
          softdroptime+=sdr
       }
+      }
 
-   if (keyheld!=0 && elp-timedirpress>das){
+   while (keyheld!=0 && elp-timedirpress>das){
       timedirpress+=arr
          let temp=[[current[0][0]+keyheld,current[0][1]],current[1],current[2]]
          if (checkpos(temp)){
