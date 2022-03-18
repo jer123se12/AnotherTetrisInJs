@@ -676,6 +676,7 @@ function putblock(cur){
       console.log(JSON.parse(JSON.stringify(board)))
 
 }
+let joinshapes=true
 function rend(cur){
    for (let i=5;i<board.length;i++){
       for (let j=0; j<board[i].length;j++){
@@ -683,8 +684,22 @@ function rend(cur){
             vboard[i-5][j].className="grid"
          }else{
             if (!endgame){
-                     vboard[i-5][j].className=`grid b${board[i][j]}`
-                     }else{
+                     let classes=`grid b${board[i][j]}`
+                     if (i>0 && board[i-1][j]!=board[i][j]){
+                        classes+=" bt"
+                     }
+                     if (i<board.length-1 && board[i+1][j]!=board[i][j]){
+                        classes+=" bb"
+                     }
+                     if (j>0 && board[i][j-1]!=board[i][j]){
+                        classes+=" bl"
+                     }
+                     if (j<board[0].length-1 && board[i][j+1]!=board[i][j]){
+                        classes+=" br"
+                     }
+                     vboard[i-5][j].className=classes
+                     console.log(classes)
+            }else{
                      vboard[i-5][j].className=`grid b${0}`
 
                      }

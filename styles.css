@@ -1,6 +1,6 @@
 .grid{
     opacity: 0.3;
-    border: 1px inset #aaa;
+    border: 1px solid #aaa;
     background: #000;
 }
 .row{
@@ -184,17 +184,24 @@ body{
     text-align: center;
 }
 
-h1 {
-    font-family: Arial, Helvetica;
-}
 
-h2 {
-    font-family: Arial, Helvetica;
-}
 
 .startGameButton {
     background: linear-gradient(to bottom right, #31B4FF, #31FF88);
     font-family: Arial, Helvetica;
     font-size: 1.5rem;
     border-radius: 1rem;
+}
+
+.bt{
+   border-top-color: #000;
+}
+.bb{
+   border-bottom-color: #000;
+}
+.br{
+   border-right-color: #000;
+}
+.bl{
+   border-left-color: #000;
 }
