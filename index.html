@@ -1,16 +1,18 @@
 <!DOCTYPE html>
 <html>
-    <head>
+
+<head>
     <title>Tetris!!!</title>
-        <link rel="preconnect" href="https://fonts.googleapis.com"> 
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
-<link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap" rel="stylesheet">
-        <script src="./howler.js/dist/howler.js"></script>
-        <script src="script.js"></script>
-        <link rel="stylesheet" href="styles.css">
-    </head>
-    <body onload="load();settingsOnStartup()" class="mainFrame">
-        <!--
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap" rel="stylesheet">
+    <script src="./howler.js/dist/howler.js"></script>
+    <script src="script.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body onload="load();settingsOnStartup()" class="mainFrame">
+    <!--
         <div class="headerText" style="padding-bottom: 1%;">
             <h1>Tetris in JavaScript</h1>
             <p>Created in JavaScript by Jerick Seng and Ethan Chew</p>
@@ -20,109 +22,128 @@
             <button class="startGameButton" id="startGameButton">Start Game</button>
         </div>
         -->
-        <script>
+    <script>
 
-            let settings=true
-            function toggle(){
-               settings=!settings
-               console.log(settings)
-               if (settings === false){
-                  tgplay()
-                   document.getElementById("overlay").style.display = "flex";
-               }
-               else{
-                  loadSettings()
-                  tgplay()
-                   document.getElementById("overlay").style.display="none"
-               }
+        let settings = true
+        function toggle() {
+            settings = !settings
+            console.log(settings)
+            if (settings === false) {
+                tgplay()
+                document.getElementById("overlay").style.display = "flex";
             }
-            function settingsOnStartup(){
-            document.getElementById("DASval").innerHTML=`${getCookie("das")}ms`
+            else {
+                loadSettings()
+                tgplay()
+                document.getElementById("overlay").style.display = "none"
+            }
+        }
+        function settingsOnStartup() {
+            document.getElementById("DASval").innerHTML = `${getCookie("das")}ms`
             console.log(getCookie("das"))
-            document.getElementById("dasrange").value=getCookie("das")
-            document.getElementById("ARRval").innerHTML=`${getCookie("arr")}ms`
+            document.getElementById("dasrange").value = getCookie("das")
+            document.getElementById("ARRval").innerHTML = `${getCookie("arr")}ms`
             console.log(getCookie("arr"))
-            document.getElementById("arrrange").value=getCookie("arr")
-            document.getElementById("SDRval").innerHTML=`${getCookie("sdr")}ms`
+            document.getElementById("arrrange").value = getCookie("arr")
+            document.getElementById("SDRval").innerHTML = `${getCookie("sdr")}ms`
 
             console.log(getCookie("arr"))
-            document.getElementById("sdrrange").value=getCookie("sdr")
-            document.getElementById("shkrange").value=(getCookie("shake")*100)
-            document.getElementById("SHKval").innerHTML=(getCookie("shake")*100)
+            document.getElementById("sdrrange").value = getCookie("sdr")
+            document.getElementById("shkrange").value = (getCookie("shake") * 100)
+            document.getElementById("SHKval").innerHTML = (getCookie("shake") * 100)
 
-            
-            }
-        </script>
-        <img id="settings-toggle" onclick="toggle();" src="src/img/GearIcon.png" style="height:50px;width:50px; z-index:10000;position: absolute; top:10px;left: 10px;width: fit-content;height:fit-content;background:transparent;"/>
-        <div id="overlay">
-            <div class="row">
-                <div style="display: grid;grid-template-columns: repeat(2, 1fr);column-gap: 50px;row-gap: 0px;overflow: scroll;">
-                    <h1 class="griditem">Settings</h1>
-                    <div></div>
-                    <h2 class="griditem">Left</h2>
-                    <div class="rebind" id="ctrlleft" onclick="setkey='left';document.getElementById(`ctrl${setkey}`).innerHTML='';"></div>
-                    <h2 class="griditem">Right</h2>
-                    <div class="rebind" id="ctrlright" onclick="setkey='right';document.getElementById(`ctrl${setkey}`).innerHTML='';"></div>
-                    <h2 class="griditem">Hard Drop</h2>
-                    <div class="rebind" id="ctrlhd" onclick="setkey='hd';document.getElementById(`ctrl${setkey}`).innerHTML='';"></div>
-                    <h2 class="griditem">Soft Drop</h2>
-                    <div class="rebind" id="ctrlsd" onclick="setkey='sd';document.getElementById(`ctrl${setkey}`).innerHTML='';"></div>
-                    <h2 class="griditem">Rotate Right</h2>
-                    <div class="rebind" id="ctrlr" onclick="setkey='r';document.getElementById(`ctrl${setkey}`).innerHTML='';"></div>
-                    <h2 class="griditem">Rotate Left</h2>
-                    <div class="rebind" id="ctrll" onclick="setkey='l';document.getElementById(`ctrl${setkey}`).innerHTML='';"></div>
-                    <h2 class="griditem">Hold</h2>
-                    <div class="rebind" id="ctrlhold" onclick="setkey='hold';document.getElementById(`ctrl${setkey}`).innerHTML='';"></div>
-                    <h2 class="griditem">Delayed Auto Shift</h2>
-                    <div id="slider and value container" class="row"style="width:20rem;align-items:center;">
-                     <input type="range" min="20" max="500" value="parseInt(getCookie(`das`))" class="slider" id="dasrange"   oninput= "document.getElementById(`DASval`).innerHTML=`${this.value}ms`; setCookie(`das`,this.value,1000)" >
-                     <h3 id="DASval"></h3>
-                    </div>
-                    <h2 class="griditem">Auto Repeat Rate</h2>
-                    <div id="slider and value container" class="row"style="width:20rem;align-items:center;">
-                     <input type="range" min="1" max="100" value="parseInt(getCookie(`arr`))" class="slider" id="arrrange"   oninput= "document.getElementById(`ARRval`).innerHTML=`${this.value}ms`; setCookie(`arr`,this.value,1000)" >
-                     <h3 id="ARRval"></h3>
-                    </div>
-                    <h2 class="griditem">Soft Drop Rate</h2>
-                    <div id="slider and value container" class="row"style="width:20rem;align-items:center;">
-                     <input type="range" min="1" max="100" value="parseInt(getCookie(`sdr`))" class="slider" id="sdrrange"   oninput= "document.getElementById(`SDRval`).innerHTML=`${this.value}ms`; setCookie(`sdr`,this.value,1000)" >
-                     <h3 id="SDRval"></h3>
-                    </div>
-                    <h2 class="griditem">Shake</h2>
-                    <div id="slider and value container" class="row"style="width:20rem;align-items:center;">
-                     <input type="range" min="0" max="100" value="parseInt(getCookie(`sdr`))" class="slider" id="shkrange"   oninput= "document.getElementById(`SHKval`).innerHTML=`${(this.value)}`; setCookie(`shake`,(this.value/100),1000)" >
-                     <h3 id="SHKval"></h3>
-                    </div>
+
+        }
+    </script>
+    <img id="settings-toggle" onclick="toggle();" src="src/img/GearIcon.png"
+        style="height:50px;width:50px; z-index:10000;position: absolute; top:10px;left: 10px;width: fit-content;height:fit-content;background:transparent;" />
+    <div id="overlay">
+        <div class="row">
+            <div
+                style="display: grid;grid-template-columns: repeat(2, 1fr);column-gap: 50px;row-gap: 0px;overflow: scroll;">
+                <h1 class="griditem">Settings</h1>
+                <div></div>
+                <h2 class="griditem">Left</h2>
+                <div class="rebind" id="ctrlleft"
+                    onclick="setkey='left';document.getElementById(`ctrl${setkey}`).innerHTML='';"></div>
+                <h2 class="griditem">Right</h2>
+                <div class="rebind" id="ctrlright"
+                    onclick="setkey='right';document.getElementById(`ctrl${setkey}`).innerHTML='';"></div>
+                <h2 class="griditem">Hard Drop</h2>
+                <div class="rebind" id="ctrlhd"
+                    onclick="setkey='hd';document.getElementById(`ctrl${setkey}`).innerHTML='';"></div>
+                <h2 class="griditem">Soft Drop</h2>
+                <div class="rebind" id="ctrlsd"
+                    onclick="setkey='sd';document.getElementById(`ctrl${setkey}`).innerHTML='';"></div>
+                <h2 class="griditem">Rotate Right</h2>
+                <div class="rebind" id="ctrlr"
+                    onclick="setkey='r';document.getElementById(`ctrl${setkey}`).innerHTML='';"></div>
+                <h2 class="griditem">Rotate Left</h2>
+                <div class="rebind" id="ctrll"
+                    onclick="setkey='l';document.getElementById(`ctrl${setkey}`).innerHTML='';"></div>
+                <h2 class="griditem">Hold</h2>
+                <div class="rebind" id="ctrlhold"
+                    onclick="setkey='hold';document.getElementById(`ctrl${setkey}`).innerHTML='';"></div>
+                <h2 class="griditem">Delayed Auto Shift</h2>
+                <div id="slider and value container" class="row" style="width:20rem;align-items:center;">
+                    <input type="range" min="20" max="500" value="parseInt(getCookie(`das`))" class="slider"
+                        id="dasrange"
+                        oninput="document.getElementById(`DASval`).innerHTML=`${this.value}ms`; setCookie(`das`,this.value,1000)">
+                    <h3 id="DASval"></h3>
                 </div>
-                
+                <h2 class="griditem">Auto Repeat Rate</h2>
+                <div id="slider and value container" class="row" style="width:20rem;align-items:center;">
+                    <input type="range" min="1" max="100" value="parseInt(getCookie(`arr`))" class="slider"
+                        id="arrrange"
+                        oninput="document.getElementById(`ARRval`).innerHTML=`${this.value}ms`; setCookie(`arr`,this.value,1000)">
+                    <h3 id="ARRval"></h3>
+                </div>
+                <h2 class="griditem">Soft Drop Rate</h2>
+                <div id="slider and value container" class="row" style="width:20rem;align-items:center;">
+                    <input type="range" min="1" max="100" value="parseInt(getCookie(`sdr`))" class="slider"
+                        id="sdrrange"
+                        oninput="document.getElementById(`SDRval`).innerHTML=`${this.value}ms`; setCookie(`sdr`,this.value,1000)">
+                    <h3 id="SDRval"></h3>
+                </div>
+                <h2 class="griditem">Shake</h2>
+                <div id="slider and value container" class="row" style="width:20rem;align-items:center;">
+                    <input type="range" min="0" max="100" value="parseInt(getCookie(`sdr`))" class="slider"
+                        id="shkrange"
+                        oninput="document.getElementById(`SHKval`).innerHTML=`${(this.value)}`; setCookie(`shake`,(this.value/100),1000)">
+                    <h3 id="SHKval"></h3>
+                </div>
             </div>
+
         </div>
-        <div style="position:absolute;left:0px;top:0px;height:100vh;width:100vw; display: flex;display: flex;justify-content: center;align-items: center;flex-direction:column">
-            <div id="motionTop"></div>
-            <div class="row">
+    </div>
+    <div
+        style="position:absolute;left:0px;top:0px;height:100vh;width:100vw; display: flex;display: flex;justify-content: center;align-items: center;flex-direction:column">
+        <div id="motionTop"></div>
+        <div class="row">
 
             <div id="motionLeft"></div>
             <div>
-            <div id="hold" style="padding: 10px;"></div>
-            <div id="gameData" style="padding:10px;">
-               <h3 id="score">Score: 0</h3>
-               <h3>Lines Cleared:<br><span id="linesCleared"></span></h3>
-               <h3>Combo: <br><span id="Combo"></span></h3>
-               <h3 style="display:none;">Finesse: <br><span id="linesCleared"></span></h3>
-            </div>
+                <div id="hold" style="padding: 10px;"></div>
+                <div id="gameData" style="padding:10px;">
+                    <h3 id="score">Score: 0</h3>
+                    <h3>Lines Cleared:<br><span id="linesCleared"></span></h3>
+                    <h3>Combo: <br><span id="Combo"></span></h3>
+                    <h3 style="display:none;">Finesse: <br><span id="linesCleared"></span></h3>
+                </div>
             </div>
             <div>
-            <div id="board"></div>
-            <div id="resetGame" onclick="resetGame()">
-            <h3>Reset</h3>
-            </div>
+                <div id="board"></div>
+                <div id="resetGame" onclick="resetGame()">
+                    <h3>Reset</h3>
+                </div>
             </div>
             <div id="next"></div>
             <div id="motionRight"></div>
-            
-            </div>
-            <div id="motionBottom"></div>
-            <div id="FPS" style="position: absolute;bottom:0;right:0;"></div>
+
         </div>
-    </body>
+        <div id="motionBottom"></div>
+        <div id="FPS" style="position: absolute;bottom:0;right:0;"></div>
+    </div>
+</body>
+
 </html>
