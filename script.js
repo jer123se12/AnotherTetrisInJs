@@ -837,11 +837,6 @@ function checklineclear() {
    }
    if (board[4].reduce((a, b) => a + b, 0) != 0) {
 
-      play = false
-      endgame = true
-
-
-      console.log("DIE")
    }
    updateDataLabels()
 }
@@ -858,6 +853,12 @@ function resetblock() {
    isfloor = false
    timetouchedfloor = -1
    nextmovetime += droprate
+   if (!checkpos(current )){
+      play = false
+      endgame = true
+
+
+      console.log("DIE")}
 }
 let lastpaused = 0
 function tgplay() {
