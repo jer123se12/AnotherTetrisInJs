@@ -216,7 +216,7 @@ function keydown(e) {
          break;
       case keybinds["hd"]:
          let temp = hd()
-         position[1] -= (temp[0][1] - current[0][1]) * (4 * shake)
+         position[1] -= (temp[0][1] - current[0][1]) * ( shake)
          current = temp
          putblock(current)
          resetblock()
@@ -616,7 +616,7 @@ function move(dir) {
       current = temp
       timetouchedfloor = elp
    } else {
-      position[0] += keyheld * (8 * shake)
+      position[0] += keyheld * (shake)
    }
 
 }
@@ -928,7 +928,7 @@ function loop(timestamp) {
                timetouchedfloor = elp + 0
                break
             } else {
-               position[1] -= 3
+               position[1] -= shake
             }
          }
          softdroptime += sdr
@@ -943,7 +943,7 @@ function loop(timestamp) {
          current = temp
          timetouchedfloor = elp
       } else {
-         position[0] += keyheld * (10 * shake)
+         position[0] += keyheld * ( shake)
       }
    }
    if (isfloor && elp - timetouchedfloor > lockdelay) {
